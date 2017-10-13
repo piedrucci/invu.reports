@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {utils} from '../../utils/utils'
 
 class ItemsReport extends Component{
     constructor(props){
@@ -7,6 +8,11 @@ class ItemsReport extends Component{
 
         }
     }
+
+    componentDidMount(){
+        console.log(utils.showApiPath())
+    }
+
     render() {
     return (
         <div>ITEMS REPORT</div>
