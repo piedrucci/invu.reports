@@ -1,26 +1,20 @@
 import moment from 'moment'
 // const alasql = window.alasql;
-
-let urlApi = 'https://api.invupos.com/invuApiPos/index.php?r='
 let dateFormat = "MM-DD-YYYY"
+let endPoint = "https://api.invupos.com/invuApiPos/index.php?r="
 
 export const utils = {
-    showApiPath: ()=> {
-        return urlApi
-    },
+    
 
-    // DEVUELVE ARRAY CON LAS FECHAS DE INICIO Y FIN EN FORMATO EPOCH(UNIX)
-    getEpochDate: (date) => {
-        let epochStartingDate = moment(date + " 00:00:00 +0000", dateFormat + " HH:mm:ss Z").valueOf();
-        let epochEndingDate   = moment(date + " 23:59:59 +0000", dateFormat + " HH:mm:ss Z").valueOf();
+    // DEVUELVE ARRAY CON LAS FECHAS DE INICIO Y FIN EN FORMATO EPOCH(UNIX)... null si es fecha invalida
+    getEpochDate: (strDate) => {
+        let epochStartingDate = (moment(strDate + " 00:00:00 +0000", dateFormat + " HH:mm:ss Z").isValid()) ? moment(strDate + " 00:00:00 +0000", dateFormat + " HH:mm:ss Z").valueOf() : null;
+        let epochEndingDate   = (moment(strDate + " 23:59:59 +0000", dateFormat + " HH:mm:ss Z").isValid()) ? moment(strDate + " 23:59:59 +0000", dateFormat + " HH:mm:ss Z").valueOf() : null;
+
         return [
-        (epochStartingDate / 1000),
-        (epochEndingDate / 1000)
+        (epochStartingDate!==null)?(epochStartingDate / 1000):null,
+        (epochEndingDate  !==null)?(epochEndingDate / 1000):null
         ]
-    },
-
-    getItemsByDates: (dates)=> {
-
     },
 
     getDateFormat: () => {
@@ -28,6 +22,34 @@ export const utils = {
     }
 } 
 
+
+
+
+export const api =
+{
+  getBrachs(apiKey) {
+    const response = fetch( endPoint + 'configuraciones/Franquicias',
+                                  { headers: { 'APIKEY': apiKey } })
+    return response
+  },
+
+  getFinDiaFechas(fechas, apiKey) {
+    const response = fetch( endPoint + 'citas/TotalPorFecha/fini/' + fechas.inicio + '/ffin/' + fechas.fin,
+                                  { headers: { 'APIKEY': apiKey } })
+    return response
+  },
+
+  getItemsSummary(jsonDates, apiKey) {
+    const fullPath = endPoint + 'citas/TotalesItemsVendidosFechas/fini/' + jsonDates.startingDate + '/ffin/' + jsonDates.endingDate
+    const response = fetch( fullPath, { headers: { 'APIKEY': apiKey } })
+    return response
+  },
+
+  setEndPoint(uri) {
+    endPoint = uri
+  },
+
+}
 
 
 

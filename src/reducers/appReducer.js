@@ -2,16 +2,19 @@ import * as appActions from '../actions/appActions';
  
  const initialState = {
     activeModule: 1,
-    // vin: '',
-    // license: '',
+    itemsSummaryHeader: ['ITEM', 'QUANTITY', 'ORDER COUNT', 'GROSS', 'DISCOUNT', 'NET', 'ORDER TAX', 'HORA'],
+    itemsSummaryData: [],
     // session: {}
  }
  
  export const appReducer = ( state = initialState, action ) => {
     switch (action.type) {
-       case appActions.CHANGE_MENU_OPTION:
+      case appActions.CHANGE_MENU_OPTION:
           // return Object.assign( {}, action.t )
           return {...state, activeModule: action.payload}
+      
+      case appActions.SET_ITEMS_SUMMARY:
+          return {...state, itemsSummaryData: action.payload}
  
     //    case SET_SESSION:
     //       // console.log(action.s)
