@@ -14,9 +14,10 @@ class ToolBar extends Component{
             startDate: null,
             endDate: null,
             focused: false,
-            activeRange: true,
+            activeRange: false,
             focusedInput: null,
-            disabledButtonSearch: true
+            disabledButtonSearch: true,
+            fetchingData: false
         }
         this.onDateChange  = this.onDateChange.bind(this)
         this.onDatesChange = this.onDatesChange.bind(this)
@@ -75,11 +76,16 @@ class ToolBar extends Component{
     }
 
     loadResults = async() => {
+        this.toggleFetchData(true)
+
         const epochStartingDate = utils.getEpochDate(moment(this.state.startDate).format(utils.getDateFormat()))
+        const epochEndingDate = (this.state.activeRange) ? utils.getEpochDate(moment(this.state.endDate).format(utils.getDateFormat())) : null
+
+
         const response = await api.getItemsSummary(
             {
                 startingDate: epochStartingDate[0],
-                endingDate: epochStartingDate[1]
+                endingDate: (this.state.activeRange) ? epochEndingDate[1] : epochStartingDate[1]
             }
             , "bd_lcaesarsvzaita"
         )
@@ -88,9 +94,9 @@ class ToolBar extends Component{
             let arrData = jsonData.data.map( (item, index) => {
                 return {
                     'item':item.item.nombre, 
-                    quantityItems: parseInt(item.item.cantidad_vendida),
-                    quantityOrders: parseInt(item.item.cantidad_ordenes),
-                    gross: parseFloat(item.item.total_vendido),
+                    quantityItems: parseInt(item.item.cantidad_vendida, 10),
+                    quantityOrders: parseInt(item.item.cantidad_ordenes, 10),
+                    gross: parseFloat(item.item.total_vendido).toFixed(2),
                 }
             } )
             await this.props.setItemsSummary(arrData)
@@ -99,6 +105,16 @@ class ToolBar extends Component{
             alert(jsonData.error)
         }
 
+        this.toggleFetchData(false)
+    }
+    
+    toggleFetchData = async(sw) => {
+        await this.setState(
+            {
+                fetchingData: sw,
+                disabledButtonSearch: sw
+            }
+        )
     }
 
     render(){
@@ -129,8 +145,8 @@ class ToolBar extends Component{
                         onFocusChange={this.onFocusChange}
                         focusedInput={this.state.focusedInput}
                         displayFormat={utils.getDateFormat()}
-                        // isOutsideRange={ date => date.year() !== 2017}
-                        isOutsideRange={date => date.year() !== moment()}
+                        isOutsideRange={() => false}
+                        // isOutsideRange={date => date.year() !== moment()}
                     /> 
                     }
 
@@ -139,7 +155,8 @@ class ToolBar extends Component{
                         className="btn btn-primary" 
                         disabled={this.state.disabledButtonSearch}
                         onClick={this.loadResults}
-                    >Search
+                    >Filter Data &nbsp;
+                        {this.state.fetchingData ? <i className="fa fa-spinner fa-spin"></i> : null}
                     </button>
 
                 </div>

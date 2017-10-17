@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import {utils} from '../../utils/utils'
 import TableData from '../tableData'
 import { connect } from 'react-redux';
-import * as appActions from '../../actions/appActions';
+// import * as appActions from '../../actions/appActions';
 
 class ItemsReport extends Component{
     constructor(props){
@@ -17,11 +16,15 @@ class ItemsReport extends Component{
     }
 
     render() {
-    return (
-        <div>ITEMS REPORT
-        <TableData header={this.state.header} />
-        </div>
-    )
+        return (
+            <div>ITEMS REPORT
+            {
+                this.props.AppData.itemsSummaryData.length>0?
+                <TableData header={this.state.header} />
+                : null
+            }
+            </div>
+        )
   }
 
 }

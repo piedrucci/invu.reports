@@ -1,32 +1,59 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import * as appActions from '../../actions/appActions';
+// import * as appActions from '../../actions/appActions';
+import Pagination from '../../utils/pagination'
 
 class TableData extends Component {
-    constructor(props){
+    constructor(props) {
         super(props)
+        this.state = {
+            items: props.AppInfo.itemsSummaryData
+        }
+        this.onChangePage = this.onChangePage.bind(this);
     }
 
+    onChangePage(pageOfItems) {
+        // update state with new page of items
+        this.setState({ pageOfItems: pageOfItems });
+    }
+ 
     render(){
+        const data = this.props.AppInfo.itemsSummaryData
         let headerTable = this.props.header.map( (columnName, index) => {
             return <th key={'col'+index}>{columnName}</th>
         } )
-        let dataTable = this.props.AppInfo.itemsSummaryData.map( (elem, index) => {
+
+
+        let dataTable = data.map( (elem, index) => {
             return <tr key={'row'+index}><td>{elem.item}</td><td>{elem.quantityItems}</td><td>{elem.quantityOrders}</td><td>{elem.gross}</td></tr>
         } )
-        // console.log(this.props.AppInfo)
-        console.log(dataTable)
+
+        Object.keys(data).forEach(function (key) {
+            console.log(data[key])
+         });
+
+        const quantities = data.reduce( (acum, current) => { return acum + current.quantityItems },0 )
+        const quantOrders = data.reduce( (acum, current) => { return acum + current.quantityOrders },0 )
+        const gross = data.reduce( (acum, current) => { return acum + parseFloat(current.gross) },0 )
+        // console.log(`${quantities}, ${quantOrders}, ${gross}`)
+
+
+        // console.log(this.props.AppInfo.itemsSummaryData)
+
         return (
-            <table className="table table-striped">
-            <thead>
-              <tr>
-                {headerTable}
-              </tr>
-            </thead>
-            <tbody>
-            {dataTable}
-            </tbody>
-            </table>
+            <div>
+                <table className="table table-striped table-hover table-sm table-responsive">
+                <thead>
+                    <tr>
+                    {headerTable}
+                    </tr>
+                </thead>
+                <tbody>
+                    {dataTable}
+                </tbody>
+                </table>
+                <Pagination items={this.props.AppInfo.itemsSummaryData} onChangePage={this.onChangePage} />
+            </div>
         )
     }
 }

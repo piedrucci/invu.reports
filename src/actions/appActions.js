@@ -1,5 +1,6 @@
 export const CHANGE_MENU_OPTION = 'change_menu_option';
 export const SET_ITEMS_SUMMARY = 'set_items_summary';
+export const TOGGLE_FETCH_DATA = 'toggle_fetch_data';
 
 
 export const changeMenuOption = (payload) => {
@@ -15,6 +16,7 @@ export const setItemsSummary = (payload) => {
         payload
     }
 }
+
 
 
 
