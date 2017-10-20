@@ -82,7 +82,7 @@ class ToolBar extends Component{
         const epochEndingDate = (this.state.activeRange) ? utils.getEpochDate(moment(this.state.endDate).format(utils.getDateFormat())) : null
 
 
-        const response = await api.getItemsSummary(
+        const response = await api.getItems(
             {
                 startingDate: epochStartingDate[0],
                 endingDate: (this.state.activeRange) ? epochEndingDate[1] : epochStartingDate[1]
@@ -90,17 +90,22 @@ class ToolBar extends Component{
             , "bd_lcaesarsvzaita"
         )
         const jsonData = await response.json()
+        console.log(jsonData.data)
         if ( jsonData.encontro===true ){
             let arrData = jsonData.data.map( (item, index) => {
                 return {
-                    'item':item.item.nombre, 
-                    quantityItems: parseInt(item.item.cantidad_vendida, 10),
-                    quantityOrders: parseInt(item.item.cantidad_ordenes, 10),
-                    gross: parseFloat(item.item.total_vendido).toFixed(2),
+                    'item':'aaaa', 
+                    quantityItems: 0,
+                    quantityOrders: 0,
+                    gross: 0,
+                    // 'item':item.item.nombre, 
+                    // quantityItems: parseInt(item.item.cantidad_vendida, 10),
+                    // quantityOrders: parseInt(item.item.cantidad_ordenes, 10),
+                    // gross: parseFloat(item.item.total_vendido).toFixed(2),
                 }
             } )
             await this.props.setItemsSummary(arrData)
-            // console.log(arrData)
+            console.log(arrData)
         }else{
             alert(jsonData.error)
         }

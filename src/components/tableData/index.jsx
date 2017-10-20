@@ -1,61 +1,52 @@
 import React, { Component } from 'react'
+import ReactTable from 'react-table'
+import 'react-table/react-table.css'
 import { connect } from 'react-redux';
 // import * as appActions from '../../actions/appActions';
-import Pagination from '../../utils/pagination'
+
 
 class TableData extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            items: props.AppInfo.itemsSummaryData
-        }
-        this.onChangePage = this.onChangePage.bind(this);
-    }
-
-    onChangePage(pageOfItems) {
-        // update state with new page of items
-        this.setState({ pageOfItems: pageOfItems });
-    }
- 
-    render(){
-        const data = this.props.AppInfo.itemsSummaryData
-        let headerTable = this.props.header.map( (columnName, index) => {
-            return <th key={'col'+index}>{columnName}</th>
-        } )
-
-
-        let dataTable = data.map( (elem, index) => {
-            return <tr key={'row'+index}><td>{elem.item}</td><td>{elem.quantityItems}</td><td>{elem.quantityOrders}</td><td>{elem.gross}</td></tr>
-        } )
-
-        Object.keys(data).forEach(function (key) {
-            console.log(data[key])
-         });
-
-        const quantities = data.reduce( (acum, current) => { return acum + current.quantityItems },0 )
-        const quantOrders = data.reduce( (acum, current) => { return acum + current.quantityOrders },0 )
-        const gross = data.reduce( (acum, current) => { return acum + parseFloat(current.gross) },0 )
-        // console.log(`${quantities}, ${quantOrders}, ${gross}`)
-
-
-        // console.log(this.props.AppInfo.itemsSummaryData)
-
+    render() {
+        const data = [
+            {
+                name: 'Tanner Linsley',
+                age: 26
+            },
+            {
+                name: 'Jason Maurer',
+                age: 23,
+            }
+            
+        ]
+      
+    //     const columns = [{
+    //       Header: 'Name',
+    //       accessor: 'name' // String-based value accessors!
+    //     }, {
+    //       Header: 'Age',
+    //       accessor: 'age',
+    //     //   Cell: props => <span className='number'>{props.value}</span> // Custom cell components!
+    //     }, 
+    //     {
+    //     //   id: 'friendName', // Required because our accessor is not a string
+    //       Header: 'Friend Name',
+    //     //   accessor: d => d.friend.name // Custom value accessors!
+    //     }, {
+    //     //   Header: props => <span>Friend Age</span>, // Custom header components!
+    //       Header: 'Friend Age'
+    //     //   accessor: 'friend.age'
+    //     }
+    // ]
+        const columns = this.props.AppInfo.itemsSummaryHeader
+      
         return (
-            <div>
-                <table className="table table-striped table-hover table-sm table-responsive">
-                <thead>
-                    <tr>
-                    {headerTable}
-                    </tr>
-                </thead>
-                <tbody>
-                    {dataTable}
-                </tbody>
-                </table>
-                <Pagination items={this.props.AppInfo.itemsSummaryData} onChangePage={this.onChangePage} />
-            </div>
+            <ReactTable
+              data={this.props.AppInfo.itemsSummaryData}
+              columns={columns}
+            />
+
         )
-    }
+      }
 }
 
 // Maps state from store to props

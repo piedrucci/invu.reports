@@ -45,6 +45,12 @@ export const api =
     return response
   },
 
+  getItems(jsonDates, apiKey) {
+    const fullPath = endPoint + 'citas/ItemsVendidosFechas/fini/' + jsonDates.startingDate + '/ffin/' + jsonDates.endingDate
+    const response = fetch( fullPath, { headers: { 'APIKEY': apiKey } })
+    return response
+  },
+
   setEndPoint(uri) {
     endPoint = uri
   },

@@ -2,7 +2,10 @@ import * as appActions from '../actions/appActions';
  
  const initialState = {
     activeModule: 1,
-    itemsSummaryHeader: ['ITEM', 'QUANTITY', 'ORDER COUNT', 'GROSS', 'DISCOUNT', 'NET', 'ORDER TAX', 'HORA'],
+    itemsSummaryHeader: [
+        {Header:'Item', accessor:'item'}, {Header:'Quantity',accessor:'quantityItems'}, {Header:'Order Count',accessor:'quantityOrders'}, 
+        {Header:'Gross', accessor:'gross'}, {Header:'Discount', accessor:'discount'}, {Header:'Net',accessor:'net'}, 
+        {Header:'Order Tax',accessor:'orderTax'}, {Header:'Hour',accessor:'hour'}],
     itemsSummaryData: [],
     // session: {}
  }
