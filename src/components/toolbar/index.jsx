@@ -32,22 +32,22 @@ class ToolBar extends Component{
     }
 
     onDateChange = async(momentDate) => {
-        await this.setState({ 
+        await this.setState({
             startDate: moment(momentDate),
-            focused: false 
+            focused: false
         })
         this.toggleButtonSearch()
     }
-    
+
     onDatesChange = async ({ startDate, endDate }) => {
-        await this.setState({ 
+        await this.setState({
             startDate: (startDate === null) ? this.state.startDate : moment(startDate),
             endDate: (endDate === null) ? this.state.endDate : moment(endDate)
         })
         this.toggleButtonSearch()
     }
-    
-    
+
+
     onFocusChange(statusFocus) {
         if ( !this.state.activeRange ) {
             const isFocused = (statusFocus.focused === null) ? false : statusFocus.focused
@@ -82,7 +82,7 @@ class ToolBar extends Component{
         const epochEndingDate = (this.state.activeRange) ? utils.getEpochDate(moment(this.state.endDate).format(utils.getDateFormat())) : null
 
 
-        const response = await api.getItems(
+        const response = await api.getItemsSummary(
             {
                 startingDate: epochStartingDate[0],
                 endingDate: (this.state.activeRange) ? epochEndingDate[1] : epochStartingDate[1]
@@ -90,29 +90,43 @@ class ToolBar extends Component{
             , "bd_lcaesarsvzaita"
         )
         const jsonData = await response.json()
-        console.log(jsonData.data)
+
         if ( jsonData.encontro===true ){
+          let totales = {qI: 0, qO: 0, gross: 0.0}
             let arrData = jsonData.data.map( (item, index) => {
+
+              // calcular totales
+              totales.qI += parseInt(item.item.cantidad_vendida, 10)
+              totales.qO += parseInt(item.item.cantidad_ordenes, 10)
+              totales.gross += parseFloat(item.item.total_vendido)
+
                 return {
-                    'item':'aaaa', 
-                    quantityItems: 0,
-                    quantityOrders: 0,
-                    gross: 0,
-                    // 'item':item.item.nombre, 
-                    // quantityItems: parseInt(item.item.cantidad_vendida, 10),
-                    // quantityOrders: parseInt(item.item.cantidad_ordenes, 10),
-                    // gross: parseFloat(item.item.total_vendido).toFixed(2),
+
+                    // 'item':'aaaa',
+                    // quantityItems: 0,
+                    // quantityOrders: 0,
+                    // gross: 0,
+
+                    'item':item.item.nombre,
+                    quantityItems: parseInt(item.item.cantidad_vendida, 10),
+                    quantityOrders: parseInt(item.item.cantidad_ordenes, 10),
+                    gross: parseFloat(item.item.total_vendido).toFixed(2),
+
+                    // 'item':[{value:item.item.nombre, footer: ""}],
+                    // quantityItems: [{value: parseInt(item.item.cantidad_vendida, 10), footer: totales.qI}],
+                    // quantityOrders: [{value: parseInt(item.item.cantidad_ordenes, 10), footer: totales.qI}],
+                    // gross: [{value: parseFloat(item.item.total_vendido).toFixed(2), footer: totales.qI}],
                 }
             } )
             await this.props.setItemsSummary(arrData)
-            console.log(arrData)
+            // console.log(totales)
         }else{
             alert(jsonData.error)
         }
 
         this.toggleFetchData(false)
     }
-    
+
     toggleFetchData = async(sw) => {
         await this.setState(
             {
@@ -129,10 +143,10 @@ class ToolBar extends Component{
                     <label className="form-check-label">
                         <input className="form-check-input" type="checkbox" checked={this.state.activeRange} onChange={this.handleCheck}/> Range
                     </label>
-                    
+
                     {
                         this.state.activeRange === false ?
-                    
+
                     <SingleDatePicker
                         date={this.state.startDate} //this.state.startDate
                         focused={this.state.focused}
@@ -152,12 +166,12 @@ class ToolBar extends Component{
                         displayFormat={utils.getDateFormat()}
                         isOutsideRange={() => false}
                         // isOutsideRange={date => date.year() !== moment()}
-                    /> 
+                    />
                     }
 
-                    <button 
-                        type="button" 
-                        className="btn btn-primary" 
+                    <button
+                        type="button"
+                        className="btn btn-primary"
                         disabled={this.state.disabledButtonSearch}
                         onClick={this.loadResults}
                     >Filter Data &nbsp;
@@ -165,7 +179,7 @@ class ToolBar extends Component{
                     </button>
 
                 </div>
-                
+
             </div>
         )
     }
@@ -177,12 +191,12 @@ const mapStateToProps = (state, ownProps) => {
       AppInfo: state.appInfo
     }
   };
-  
+
   // Maps actions to props
   const mapDispatchToProps = (dispatch) => {
     return {
       setItemsSummary: data => dispatch(appActions.setItemsSummary(data))
     }
   };
-  
+
   export default connect(mapStateToProps, mapDispatchToProps)(ToolBar)

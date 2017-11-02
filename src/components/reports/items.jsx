@@ -18,11 +18,12 @@ class ItemsReport extends Component{
     render() {
         return (
             <div>ITEMS REPORT
-            {
+              <TableData header={this.state.header} />
+            {/* {
                 this.props.AppData.itemsSummaryData.length>0?
                 <TableData header={this.state.header} />
                 : null
-            }
+            } */}
             </div>
         )
   }
@@ -34,12 +35,12 @@ const mapStateToProps = (state, ownProps) => {
       AppData: state.appInfo
     }
   };
-  
+
   // Maps actions to props
 //   const mapDispatchToProps = (dispatch) => {
 //     return {
 //       changeOptionMenu: opt => dispatch(appActions.changeMenuOption(opt))
 //     }
 //   };
-  
+
   export default connect(mapStateToProps, null)(ItemsReport)
