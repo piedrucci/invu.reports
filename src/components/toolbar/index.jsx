@@ -111,15 +111,9 @@ class ToolBar extends Component{
                     quantityItems: parseInt(item.item.cantidad_vendida, 10),
                     quantityOrders: parseInt(item.item.cantidad_ordenes, 10),
                     gross: parseFloat(item.item.total_vendido).toFixed(2),
-
-                    // 'item':[{value:item.item.nombre, footer: ""}],
-                    // quantityItems: [{value: parseInt(item.item.cantidad_vendida, 10), footer: totales.qI}],
-                    // quantityOrders: [{value: parseInt(item.item.cantidad_ordenes, 10), footer: totales.qI}],
-                    // gross: [{value: parseFloat(item.item.total_vendido).toFixed(2), footer: totales.qI}],
                 }
             } )
             await this.props.setItemsSummary(arrData)
-            // console.log(totales)
         }else{
             alert(jsonData.error)
         }

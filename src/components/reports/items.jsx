@@ -17,13 +17,12 @@ class ItemsReport extends Component{
 
     render() {
         return (
-            <div>ITEMS REPORT
-              <TableData header={this.state.header} />
-            {/* {
+            <div>
+            {
                 this.props.AppData.itemsSummaryData.length>0?
                 <TableData header={this.state.header} />
                 : null
-            } */}
+            }
             </div>
         )
   }
