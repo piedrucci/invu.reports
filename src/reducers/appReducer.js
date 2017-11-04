@@ -1,31 +1,19 @@
-import React , { Component}  from 'react'
+// import React , { Component}  from 'react'
 import * as appActions from '../actions/appActions'
-import _ from 'lodash'
-
-const dataFooter = () => {
-  console.log(initialState.itemsSummaryData);
-  return (
-    <span>
-      <strong>Average:</strong>{" "}
-      {/* {_.round(_.mean(_.map(initialState.itemsSummaryData, d => d.quantityItems)))} */}
-      {/* {_.map(initialState.itemsSummaryData, d => d.quantityItems)} */}
-      {/* {_.map(AppInfo.itemsSummaryData, d => console.log(d) )} */}
-    </span>)
-}
+// import _ from 'lodash'
 
 const initialState = {
     activeModule: 1,
-    itemsSummaryHeader: [
-        {Header:'Item', accessor:'item', width: 400},
-        {Header:'Quantity',accessor:'quantityItems', Footer: dataFooter},
-        {Header:'Order Count',accessor:'quantityOrders'},
-        {Header:'Gross', accessor:'gross'},
-        {Header:'Discount', accessor:'discount'},
-        {Header:'Net',accessor:'net'},
-        {Header:'Order Tax',accessor:'orderTax'},
-        {Header:'Hour',accessor:'hour'}],
-    itemsSummaryData: [],
-    // session: {}
+   //  itemsSummaryHeader: [
+   //      {Header:'Item', accessor:'item', width: 400},
+   //      {Header:'Quantity',accessor:'quantityItems', Footer: dataFooter},
+   //      {Header:'Order Count',accessor:'quantityOrders'},
+   //      {Header:'Gross', accessor:'gross'},
+   //      {Header:'Discount', accessor:'discount'},
+   //      {Header:'Net',accessor:'net'},
+   //      {Header:'Order Tax',accessor:'orderTax'},
+   //      {Header:'Hour',accessor:'hour'}],
+    itemsSummaryData: []
  }
 
 
