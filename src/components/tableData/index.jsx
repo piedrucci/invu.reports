@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 import { connect } from 'react-redux'
-import {columns} from './tableColumns'
+import {columns} from '../../utils/tableColumns'
 
 class TableData extends Component {
    render( { AppInfo } = this.props ) {
