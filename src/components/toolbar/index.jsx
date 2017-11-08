@@ -57,69 +57,65 @@ class ToolBar extends Component{
         }
     }
 
-    handleCheck = ()=>{
-        this.setState({activeRange: !this.state.activeRange})
-        this.toggleButtonSearch()
-    }
+   handleCheck = async()=>{
+      await this.setState({activeRange: !this.state.activeRange})
+      this.toggleButtonSearch()
+   }
 
-    toggleButtonSearch = ()=> {
-        let disabledButton = true
-        if ( this.activeRange===true ){
-            console.log(`sss: ${this.state.startDate}`)
-            console.log(`sss: ${this.state.endDate}`)
-            disabledButton = (this.state.startDate === null && this.state.endDate === null)
-        }else if ( !this.activeRange ){
-            disabledButton = (this.state.startDate === null)
-        }
-        this.setState({disabledButtonSearch: disabledButton})
-        // console.log(this.state.disabledButtonSearch)
-    }
+   toggleButtonSearch = async()=> {
+      let disabledButton = true
+      if ( this.state.activeRange ){
+         disabledButton = (this.state.startDate!==null && this.state.endDate!==null) ?false:true
+      }else if ( !this.state.activeRange ){
+         disabledButton = (this.state.startDate === null)
+      }
+      await this.setState({disabledButtonSearch: disabledButton})
+   }
 
-    loadResults = async() => {
-        this.toggleFetchData(true)
+   loadResults = async() => {
+      this.toggleFetchData(true)
 
-        const epochStartingDate = utils.getEpochDate(moment(this.state.startDate).format(utils.getDateFormat()))
-        const epochEndingDate = (this.state.activeRange) ? utils.getEpochDate(moment(this.state.endDate).format(utils.getDateFormat())) : null
+      const epochStartingDate = utils.getEpochDate(moment(this.state.startDate).format(utils.getDateFormat()))
+      const epochEndingDate = (this.state.activeRange) ? utils.getEpochDate(moment(this.state.endDate).format(utils.getDateFormat())) : null
 
+      const response = await api.getItemsSummary(
+         {
+            startingDate: epochStartingDate[0],
+            endingDate: (this.state.activeRange) ? epochEndingDate[1] : epochStartingDate[1]
+         }
+         , "bd_lcaesarsvzaita"
+      )
+      const jsonData = await response.json()
 
-        const response = await api.getItemsSummary(
-            {
-                startingDate: epochStartingDate[0],
-                endingDate: (this.state.activeRange) ? epochEndingDate[1] : epochStartingDate[1]
+      if ( jsonData.encontro===true ){
+         let arrData = await jsonData.data.map( (item, index) => {
+
+            // calcular el total en modificadores para el item actual
+            let totalMods =  item.item.modif.reduce( (total, mod) => {
+               return parseFloat(total) + parseFloat(mod.total)
+            },0.0 ) || 0
+
+            totalMods = ( totalMods>0 ) ? parseFloat(item.item.total_vendido)+parseFloat(totalMods) : parseFloat(item.item.total_vendido)
+
+            return {
+               'item':item.item.nombre,
+               quantityItems: parseInt(item.item.cantidad_vendida, 10),
+               quantityOrders: parseInt(item.item.cantidad_ordenes, 10),
+               gross: parseFloat(totalMods).toFixed(2),
+               discount: parseFloat(item.item.descuento).toFixed(2),
+               net: (parseFloat(totalMods) - parseFloat(item.item.descuento)).toFixed(2),
+               orderTax: parseFloat(item.item.tax).toFixed(2)
             }
-            , "bd_lcaesarsvzaita"
-        )
-        const jsonData = await response.json()
 
-        if ( jsonData.encontro===true ){
-          let totales = {qI: 0, qO: 0, gross: 0.0}
-            let arrData = jsonData.data.map( (item, index) => {
+         } )
+         // arrData.push({item:'decuentos generales en ordenes', quantityItems:0, quantityOrders:0, gross:0,discount:0,net:-65.14,orderTax:0})
+         await this.props.setSalesSummary(arrData)
+      }else{
+         alert(jsonData.error)
+      }
 
-              // calcular totales
-              totales.qI += parseInt(item.item.cantidad_vendida, 10)
-              totales.qO += parseInt(item.item.cantidad_ordenes, 10)
-              totales.gross += parseFloat(item.item.total_vendido)
-
-                return {
-
-                    // 'item':'aaaa',
-                    // quantityItems: 0,
-                    // quantityOrders: 0,
-                    // gross: 0,
-
-                    'item':item.item.nombre,
-                    quantityItems: parseInt(item.item.cantidad_vendida, 10),
-                    quantityOrders: parseInt(item.item.cantidad_ordenes, 10),
-                    gross: parseFloat(item.item.total_vendido).toFixed(2),
-                }
-            } )
-            await this.props.setItemsSummary(arrData)
-        }else{
-            alert(jsonData.error)
-        }
-
-        this.toggleFetchData(false)
-    }
+      this.toggleFetchData(false)
+   }
 
     toggleFetchData = async(sw) => {
         await this.setState(
@@ -189,7 +185,8 @@ const mapStateToProps = (state, ownProps) => {
   // Maps actions to props
   const mapDispatchToProps = (dispatch) => {
     return {
-      setItemsSummary: data => dispatch(appActions.setItemsSummary(data))
+      setItemsSummary: data => dispatch(appActions.setItemsSummary(data)),
+      setSalesSummary: data => dispatch(appActions.setSalesSummary(data))
     }
   };
 

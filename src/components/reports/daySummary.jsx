@@ -3,7 +3,7 @@ import TableData from '../tableData'
 import { connect } from 'react-redux';
 // import * as appActions from '../../actions/appActions';
 
-class ItemsReport extends Component{
+class DaySummaryReport extends Component{
     constructor(props){
         super(props)
         this.state = {
@@ -42,4 +42,4 @@ const mapStateToProps = (state, ownProps) => {
 //     }
 //   };
 
-  export default connect(mapStateToProps, null)(ItemsReport)
+  export default connect(mapStateToProps, null)(DaySummaryReport)

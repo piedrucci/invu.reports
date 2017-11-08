@@ -1,48 +1,30 @@
 import React, { Component } from 'react'
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
-import { connect } from 'react-redux';
-import FooterCell from './footerCell'
-// import * as appActions from '../../actions/appActions';
-
+import { connect } from 'react-redux'
+import {columns} from './tableColumns'
 
 class TableData extends Component {
-   render() {
+   render( { AppInfo } = this.props ) {
+      const { activeModule, itemsSummaryData } = AppInfo
 
-
-      const columns = [
-         {Header:'Item', accessor:'item', width: 300},
-         {Header:'Quantity',accessor:'quantityItems', Footer: (
-            // <span>
-            //   <strong>Average:</strong>{" "}
-            //   {_.round(_.mean(_.map(this.props.AppInfo.itemsSummaryData, d => d.quantityItems)))}
-            // </span>
-            <FooterCell dataSet={this.props.AppInfo.itemsSummaryData} options={{isInt:true,groupKey:'quantityItems'}}/>
-         )},
-         {Header:'Order Count',accessor:'quantityOrders', Footer: (
-            <FooterCell dataSet={this.props.AppInfo.itemsSummaryData} options={{isInt:true,groupKey:'quantityOrders'}}/>
-         )},
-         {Header:'Gross', accessor:'gross', Footer: (
-            <FooterCell dataSet={this.props.AppInfo.itemsSummaryData} options={{isInt:false,groupKey:'gross'}}/>
-         )},
-         {Header:'Discount', accessor:'discount', Footer: (
-            <FooterCell dataSet={this.props.AppInfo.itemsSummaryData} options={{isInt:true,groupKey:'discount'}}/>
-         )},
-         {Header:'Net',accessor:'net', Footer: (
-            <FooterCell dataSet={this.props.AppInfo.itemsSummaryData} options={{isInt:true,groupKey:'net'}}/>
-         )},
-         {Header:'Order Tax',accessor:'orderTax', Footer: (
-            <FooterCell dataSet={this.props.AppInfo.itemsSummaryData} options={{isInt:true,groupKey:'orderTax'}}/>
-         )},
-         {Header:'Hour',accessor:'hour'}
-      ]
+      // let columnHeaders, dataSet = []
+      //
+      // // setear las variables (datos y cabeceras) segun el tipo de reporte ....
+      // if ( activeModule === 1 ) {
+      //    columnHeaders = columns.sales(itemsSummaryData)
+      //    dataSet = itemsSummaryData
+      // }else if ( activeModule === 2 ) {
+      //    columnHeaders = columns.sales(itemsSummaryData)
+      //    dataSet = itemsSummaryData
+      // }
 
       return (
          <ReactTable
-            data={this.props.AppInfo.itemsSummaryData}
-            columns={columns}
+            data={this.props.dataSet}
+            columns={this.props.headers}
             pageSizeOptions={[5, 10, 20, 25, 50, 100]}
-            defaultPageSize={10}
+            defaultPageSize={20}
             className="-striped -highlight"
          />
       )

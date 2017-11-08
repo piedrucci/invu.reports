@@ -1,12 +1,10 @@
 import React from 'react'
-import { Switch, Route,
-   // Redirect 
-} from 'react-router-dom'
+import { Switch, Route, Redirect } from 'react-router-dom'
 // import Home from '../home'
 // import Login from '../login'
 // import ChartContainer from '../chart'
 
-import ItemsReport from '../reports/items'
+import SalesReport from '../reports/sales'
 // import PaymentStats from '../statistic/daySummary'
 
 // The Main component renders one of the three provided
@@ -17,11 +15,11 @@ import ItemsReport from '../reports/items'
 const Container = () => (
   <main>
     <Switch>
-      <Route exact path='/' component={ItemsReport}/>
+      <Route exact path='/' component={SalesReport}/>
       {/* <Route path='/dashboard' component={ChartContainer}/> */}
-      <Route path='/items' component={ItemsReport}/>
-      {/* <Route path='/daysumary' component={PaymentStats}/>
-      <Redirect from="/" to="/stats"/> */}
+      <Route path='/sales' component={SalesReport}/>
+      {/* <Route path='/daysumary' component={PaymentStats}/> */}
+      {/* <Redirect from="/" to="/sales"/> */}
     </Switch>
   </main>
 )

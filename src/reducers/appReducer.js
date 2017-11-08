@@ -1,18 +1,9 @@
 // import React , { Component}  from 'react'
 import * as appActions from '../actions/appActions'
-// import _ from 'lodash'
 
 const initialState = {
     activeModule: 1,
-   //  itemsSummaryHeader: [
-   //      {Header:'Item', accessor:'item', width: 400},
-   //      {Header:'Quantity',accessor:'quantityItems', Footer: dataFooter},
-   //      {Header:'Order Count',accessor:'quantityOrders'},
-   //      {Header:'Gross', accessor:'gross'},
-   //      {Header:'Discount', accessor:'discount'},
-   //      {Header:'Net',accessor:'net'},
-   //      {Header:'Order Tax',accessor:'orderTax'},
-   //      {Header:'Hour',accessor:'hour'}],
+    salesSummaryData: [],
     itemsSummaryData: []
  }
 
@@ -21,10 +12,13 @@ const initialState = {
     switch (action.type) {
       case appActions.CHANGE_MENU_OPTION:
           // return Object.assign( {}, action.t )
-          return {...state, activeModule: action.payload}
+         return {...state, activeModule: action.payload}
+
+      case appActions.SET_SALES_SUMMARY:
+         return {...state, salesSummaryData: action.payload}
 
       case appActions.SET_ITEMS_SUMMARY:
-          return {...state, itemsSummaryData: action.payload}
+         return {...state, itemsSummaryData: action.payload}
 
     //    case SET_SESSION:
     //       // console.log(action.s)
