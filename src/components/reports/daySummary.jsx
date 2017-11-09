@@ -1,39 +1,28 @@
 import React, { Component } from 'react'
 import TableData from '../tableData'
 import { connect } from 'react-redux';
-// import * as appActions from '../../actions/appActions';
+import {columns} from '../../utils/tableColumns'
 
 class DaySummaryReport extends Component{
-    constructor(props){
-        super(props)
-        this.state = {
-            header: props.AppData.itemsSummaryHeader
-        }
-    }
-
-    componentDidMount(){
-
-    }
-
-    render() {
-        return (
-            <div>
-            {
-                this.props.AppData.itemsSummaryData.length>0?
-                <TableData header={this.state.header} />
-                : null
-            }
-            </div>
-        )
-  }
-
+   render( { AppInfo } = this.props ) {
+      const { activeModule, daySummaryData } = AppInfo
+      return (
+         <div>
+         {
+            daySummaryData.length>0?
+            <TableData dataSet={daySummaryData} headers={columns.sales(daySummaryData)} />
+            : null
+         }
+         </div>
+      )
+   }
 }
 // Maps state from store to props
 const mapStateToProps = (state, ownProps) => {
-    return {
-      AppData: state.appInfo
-    }
-  };
+   return {
+      AppInfo: state.appInfo
+   }
+}
 
   // Maps actions to props
 //   const mapDispatchToProps = (dispatch) => {

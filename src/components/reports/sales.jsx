@@ -2,12 +2,11 @@ import React, { Component } from 'react'
 import TableData from '../tableData'
 import { connect } from 'react-redux'
 import {columns} from '../../utils/tableColumns'
-// import * as appActions from '../../actions/appActions';
+// import Modal from '../../utils/modal'
 
 class SalesReport extends Component{
    render( { AppInfo } = this.props ) {
-      const { activeModule, salesSummaryData } = AppInfo
-
+      const { salesSummaryData } = AppInfo
       return (
          <div>
          {

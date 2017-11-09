@@ -1,5 +1,7 @@
 import React from 'react'
-import { Switch, Route, Redirect } from 'react-router-dom'
+import { Switch, Route,
+   // Redirect
+ } from 'react-router-dom'
 // import Home from '../home'
 // import Login from '../login'
 // import ChartContainer from '../chart'
@@ -17,8 +19,8 @@ const Container = () => (
     <Switch>
       <Route exact path='/' component={SalesReport}/>
       {/* <Route path='/dashboard' component={ChartContainer}/> */}
-      <Route path='/sales' component={SalesReport}/>
-      {/* <Route path='/daysumary' component={PaymentStats}/> */}
+      <Route path='/sales'     component={SalesReport}/>
+      <Route path='/daysumary' component={SalesReport}/>
       {/* <Redirect from="/" to="/sales"/> */}
     </Switch>
   </main>

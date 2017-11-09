@@ -27,35 +27,34 @@ class ToolBar extends Component{
         this.loadResults = this.loadResults.bind(this)
     }
 
-    componentDidMount(){
+   componentDidMount() {
+   }
 
-    }
+   onDateChange = async(momentDate) => {
+      await this.setState({
+         startDate: moment(momentDate),
+         focused: false
+      })
+      this.toggleButtonSearch()
+   }
 
-    onDateChange = async(momentDate) => {
-        await this.setState({
-            startDate: moment(momentDate),
-            focused: false
-        })
-        this.toggleButtonSearch()
-    }
-
-    onDatesChange = async ({ startDate, endDate }) => {
-        await this.setState({
-            startDate: (startDate === null) ? this.state.startDate : moment(startDate),
-            endDate: (endDate === null) ? this.state.endDate : moment(endDate)
-        })
-        this.toggleButtonSearch()
-    }
+   onDatesChange = async ({ startDate, endDate }) => {
+      await this.setState({
+         startDate: (startDate === null) ? this.state.startDate : moment(startDate),
+         endDate: (endDate === null) ? this.state.endDate : moment(endDate)
+      })
+      this.toggleButtonSearch()
+   }
 
 
-    onFocusChange(statusFocus) {
-        if ( !this.state.activeRange ) {
-            const isFocused = (statusFocus.focused === null) ? false : statusFocus.focused
-            this.setState({ focused: isFocused })
-        }else if (this.state.activeRange) {
-            this.setState({focusedInput: statusFocus})
-        }
-    }
+   onFocusChange(statusFocus) {
+      if ( !this.state.activeRange ) {
+         const isFocused = (statusFocus.focused === null) ? false : statusFocus.focused
+         this.setState({ focused: isFocused })
+      }else if (this.state.activeRange) {
+         this.setState({focusedInput: statusFocus})
+      }
+   }
 
    handleCheck = async()=>{
       await this.setState({activeRange: !this.state.activeRange})
@@ -78,53 +77,113 @@ class ToolBar extends Component{
       const epochStartingDate = utils.getEpochDate(moment(this.state.startDate).format(utils.getDateFormat()))
       const epochEndingDate = (this.state.activeRange) ? utils.getEpochDate(moment(this.state.endDate).format(utils.getDateFormat())) : null
 
-      const response = await api.getItemsSummary(
-         {
-            startingDate: epochStartingDate[0],
-            endingDate: (this.state.activeRange) ? epochEndingDate[1] : epochStartingDate[1]
-         }
-         , "bd_lcaesarsvzaita"
-      )
-      const jsonData = await response.json()
-
-      if ( jsonData.encontro===true ){
-         let arrData = await jsonData.data.map( (item, index) => {
-
-            // calcular el total en modificadores para el item actual
-            let totalMods =  item.item.modif.reduce( (total, mod) => {
-               return parseFloat(total) + parseFloat(mod.total)
-            },0.0 ) || 0
-
-            totalMods = ( totalMods>0 ) ? parseFloat(item.item.total_vendido)+parseFloat(totalMods) : parseFloat(item.item.total_vendido)
-
-            return {
-               'item':item.item.nombre,
-               quantityItems: parseInt(item.item.cantidad_vendida, 10),
-               quantityOrders: parseInt(item.item.cantidad_ordenes, 10),
-               gross: parseFloat(totalMods).toFixed(2),
-               discount: parseFloat(item.item.descuento).toFixed(2),
-               net: (parseFloat(totalMods) - parseFloat(item.item.descuento)).toFixed(2),
-               orderTax: parseFloat(item.item.tax).toFixed(2)
-            }
-
-         } )
-         // arrData.push({item:'decuentos generales en ordenes', quantityItems:0, quantityOrders:0, gross:0,discount:0,net:-65.14,orderTax:0})
-         await this.props.setSalesSummary(arrData)
-      }else{
-         alert(jsonData.error)
+      const dates = {
+         startingDate: epochStartingDate[0],
+         endingDate: (this.state.activeRange) ? epochEndingDate[1] : epochStartingDate[1]
       }
+
+      switch (this.props.AppInfo.activeModule){
+         case 1:
+            await this.loadSales(dates)
+            break
+         case 2:
+            await this.loadDaySummary(dates)
+            break
+         default:
+            break
+      }
+
 
       this.toggleFetchData(false)
    }
 
-    toggleFetchData = async(sw) => {
-        await this.setState(
-            {
-                fetchingData: sw,
-                disabledButtonSearch: sw
-            }
-        )
-    }
+
+   toggleFetchData = async(sw) => {
+      await this.setState(
+         {
+            fetchingData: sw,
+            disabledButtonSearch: sw
+         }
+      )
+   }
+
+
+   loadSales = async(dates) => {
+      try{
+         const response = await api.getItemsSummary( dates, "bd_lcaesarsvzaita" )
+         // console.log(response.status);
+         const jsonData = await response.json()
+
+         if ( jsonData.encontro===true ){
+            let arrData = await jsonData.data.map( (item, index) => {
+
+               // calcular el total en modificadores para el item actual
+               let totalMods =  item.item.modif.reduce( (total, mod) => {
+                  return parseFloat(total) + parseFloat(mod.total)
+               },0.0 ) || 0
+
+               totalMods = ( totalMods>0 ) ? parseFloat(item.item.total_vendido)+parseFloat(totalMods) : parseFloat(item.item.total_vendido)
+
+               return {
+                  'item':item.item.nombre,
+                  category:item.item.nombrecat,
+                  quantityItems: parseInt(item.item.cantidad_vendida, 10),
+                  quantityOrders: parseInt(item.item.cantidad_ordenes, 10),
+                  gross: parseFloat(totalMods).toFixed(2),
+                  discount: parseFloat(item.item.descuento).toFixed(2),
+                  net: (parseFloat(totalMods) - parseFloat(item.item.descuento)).toFixed(2),
+                  orderTax: parseFloat(item.item.tax).toFixed(2)
+               }
+
+            } )
+            // arrData.push({item:'decuentos generales en ordenes', quantityItems:0, quantityOrders:0, gross:0,discount:0,net:-65.14,orderTax:0})
+            await this.props.setSalesSummary(arrData)
+         }else{
+            alert(jsonData.error)
+         }
+      } catch (err) {
+         alert(err)
+      }
+   }
+
+
+   loadDaySummary = async(dates) => {
+      try{
+         const response = await api.getItemsSummary( dates, "bd_lcaesarsvzaita" )
+         // console.log(response.status);
+         const jsonData = await response.json()
+
+         if ( jsonData.encontro===true ){
+            let arrData = await jsonData.data.map( (item, index) => {
+
+               // calcular el total en modificadores para el item actual
+               let totalMods =  item.item.modif.reduce( (total, mod) => {
+                  return parseFloat(total) + parseFloat(mod.total)
+               },0.0 ) || 0
+
+               totalMods = ( totalMods>0 ) ? parseFloat(item.item.total_vendido)+parseFloat(totalMods) : parseFloat(item.item.total_vendido)
+
+               return {
+                  'item':item.item.nombre,
+                  category:item.item.nombrecat,
+                  quantityItems: parseInt(item.item.cantidad_vendida, 10),
+                  quantityOrders: parseInt(item.item.cantidad_ordenes, 10),
+                  gross: parseFloat(totalMods).toFixed(2),
+                  discount: parseFloat(item.item.descuento).toFixed(2),
+                  net: (parseFloat(totalMods) - parseFloat(item.item.descuento)).toFixed(2),
+                  orderTax: parseFloat(item.item.tax).toFixed(2)
+               }
+
+            } )
+            // arrData.push({item:'decuentos generales en ordenes', quantityItems:0, quantityOrders:0, gross:0,discount:0,net:-65.14,orderTax:0})
+            await this.props.setSalesSummary(arrData)
+         }else{
+            alert(jsonData.error)
+         }
+      } catch (err) {
+         alert(err)
+      }
+   }
 
     render(){
         return (

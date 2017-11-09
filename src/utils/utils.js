@@ -4,7 +4,7 @@ let dateFormat = "MM-DD-YYYY"
 let endPoint = "https://api.invupos.com/invuApiPos/index.php?r="
 
 export const utils = {
-    
+
 
     // DEVUELVE ARRAY CON LAS FECHAS DE INICIO Y FIN EN FORMATO EPOCH(UNIX)... null si es fecha invalida
     getEpochDate: (strDate) => {
@@ -20,40 +20,40 @@ export const utils = {
     getDateFormat: () => {
         return dateFormat
     }
-} 
+}
 
 
 
 
 export const api =
 {
-  getBrachs(apiKey) {
-    const response = fetch( endPoint + 'configuraciones/Franquicias',
-                                  { headers: { 'APIKEY': apiKey } })
-    return response
-  },
+   getBrachs(apiKey) {
+      const response = fetch( endPoint + 'configuraciones/Franquicias',
+      { headers: { 'APIKEY': apiKey } })
+      return response
+   },
 
-  getFinDiaFechas(fechas, apiKey) {
-    const response = fetch( endPoint + 'citas/TotalPorFecha/fini/' + fechas.inicio + '/ffin/' + fechas.fin,
-                                  { headers: { 'APIKEY': apiKey } })
-    return response
-  },
+   getFinDiaFechas(fechas, apiKey) {
+      const response = fetch( endPoint + 'citas/TotalPorFecha/fini/' + fechas.inicio + '/ffin/' + fechas.fin,
+      { headers: { 'APIKEY': apiKey } })
+      return response
+   },
 
-  getItemsSummary(jsonDates, apiKey) {
-    const fullPath = endPoint + 'citas/TotalesItemsVendidosFechas/fini/' + jsonDates.startingDate + '/ffin/' + jsonDates.endingDate
-    const response = fetch( fullPath, { headers: { 'APIKEY': apiKey } })
-    return response
-  },
+   getItemsSummary(jsonDates, apiKey) {
+      const fullPath = endPoint + 'citas/TotalesItemsVendidosFechas/fini/' + jsonDates.startingDate + '/ffin/' + jsonDates.endingDate
+      const response = fetch( fullPath, { headers: { 'APIKEY': apiKey } }) //.then((data)=>{return data}).catch((error)=>{return error})
+      return response
+   },
 
-  getItems(jsonDates, apiKey) {
-    const fullPath = endPoint + 'citas/ItemsVendidosFechas/fini/' + jsonDates.startingDate + '/ffin/' + jsonDates.endingDate
-    const response = fetch( fullPath, { headers: { 'APIKEY': apiKey } })
-    return response
-  },
+   getItems(jsonDates, apiKey) {
+      const fullPath = endPoint + 'citas/ItemsVendidosFechas/fini/' + jsonDates.startingDate + '/ffin/' + jsonDates.endingDate
+      const response = fetch( fullPath, { headers: { 'APIKEY': apiKey } })
+      return response
+   },
 
-  setEndPoint(uri) {
-    endPoint = uri
-  },
+   setEndPoint(uri) {
+      endPoint = uri
+   },
 
 }
 

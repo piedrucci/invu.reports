@@ -5,6 +5,7 @@ export const columns = {
    sales: (data) => {
       return [
          {Header:'Item', accessor:'item', width: 300},
+         {Header:'Category', accessor:'category', width: 200},
          {Header:'Quantity',accessor:'quantityItems', Footer: (
             // <span>
             //   <strong>Average:</strong>{" "}
@@ -27,7 +28,19 @@ export const columns = {
          {Header:'Order Tax',accessor:'orderTax', Footer: (
             <FooterCell dataSet={data} options={{isInt:false,groupKey:'orderTax'}}/>
          )},
-         // {Header:'Hour',accessor:'hour'}
+      ]
+   },
+
+   daySummary: (data) => {
+      return [
+         {Header:'idCita', accessor:'orderId', width: 300},
+         {Header:'amount',accessor:'price', Footer: (
+            // <span>
+            //   <strong>Average:</strong>{" "}
+            //   {_.round(_.mean(_.map(this.props.AppInfo.itemsSummaryData, d => d.quantityItems)))}
+            // </span>
+            <FooterCell dataSet={data} options={{isInt:false,groupKey:'price'}}/>
+         )},
       ]
    }
 }
