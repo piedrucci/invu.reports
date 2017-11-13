@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import TableData from '../tableData'
 import { connect } from 'react-redux'
 import {columns} from '../../utils/tableColumns'
+import { utils } from '../../utils/utils'
 // import Modal from '../../utils/modal'
 
 class SalesReport extends Component{
@@ -11,7 +12,14 @@ class SalesReport extends Component{
          <div>
          {
             salesSummaryData.length>0?
-            <TableData dataSet={salesSummaryData} headers={columns.sales(salesSummaryData)} />
+            <div>
+
+               <TableData dataSet={salesSummaryData} headers={columns.sales(salesSummaryData)} />
+               <button className="btn btn-success" onClick={()=>utils.exportData(salesSummaryData)}>
+                  <i className="fa fa-file-excel-o fa-2x" aria-hidden="true"></i>
+                  Export &nbsp;
+               </button>
+            </div>
             : null
          }
          </div>
@@ -33,4 +41,4 @@ const mapStateToProps = (state, ownProps) => {
 //     }
 //   };
 
-  export default connect(mapStateToProps, null)(SalesReport)
+export default connect(mapStateToProps, null)(SalesReport)

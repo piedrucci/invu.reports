@@ -7,6 +7,8 @@ import {utils, api} from '../../utils/utils'
 import { connect } from 'react-redux';
 import * as appActions from '../../actions/appActions';
 
+const apiKey = "bd_yogenmultiplazapos"
+
 class ToolBar extends Component{
     constructor(props){
         super(props)
@@ -93,7 +95,6 @@ class ToolBar extends Component{
             break
       }
 
-
       this.toggleFetchData(false)
    }
 
@@ -110,7 +111,7 @@ class ToolBar extends Component{
 
    loadSales = async(dates) => {
       try{
-         const response = await api.getItemsSummary( dates, "bd_lcaesarsvzaita" )
+         const response = await api.getItemsSummary( dates, apiKey )
          // console.log(response.status);
          const jsonData = await response.json()
 
@@ -122,21 +123,19 @@ class ToolBar extends Component{
                   return parseFloat(total) + parseFloat(mod.total)
                },0.0 ) || 0
 
-               totalMods = ( totalMods>0 ) ? parseFloat(item.item.total_vendido)+parseFloat(totalMods) : parseFloat(item.item.total_vendido)
+               totalMods = ( totalMods>0 ) ? (parseFloat(item.item.total_vendido)+parseFloat(totalMods)).toFixed(2) : parseFloat(item.item.total_vendido).toFixed(2)
 
                return {
                   'item':item.item.nombre,
                   category:item.item.nombrecat,
                   quantityItems: parseInt(item.item.cantidad_vendida, 10),
                   quantityOrders: parseInt(item.item.cantidad_ordenes, 10),
-                  gross: parseFloat(totalMods).toFixed(2),
-                  discount: parseFloat(item.item.descuento).toFixed(2),
-                  net: (parseFloat(totalMods) - parseFloat(item.item.descuento)).toFixed(2),
-                  orderTax: parseFloat(item.item.tax).toFixed(2)
+                  gross: parseFloat(totalMods),
+                  discount: parseFloat( parseFloat(item.item.descuento).toFixed(2) ),
+                  net: parseFloat( (parseFloat(totalMods) - parseFloat(item.item.descuento)).toFixed(2) ),
+                  orderTax: parseFloat( (parseFloat(item.item.tax).toFixed(2)) )
                }
-
             } )
-            // arrData.push({item:'decuentos generales en ordenes', quantityItems:0, quantityOrders:0, gross:0,discount:0,net:-65.14,orderTax:0})
             await this.props.setSalesSummary(arrData)
          }else{
             alert(jsonData.error)
@@ -149,89 +148,82 @@ class ToolBar extends Component{
 
    loadDaySummary = async(dates) => {
       try{
-         const response = await api.getItemsSummary( dates, "bd_lcaesarsvzaita" )
+         const response = await api.getDaySummary( dates, apiKey )
          // console.log(response.status);
          const jsonData = await response.json()
-
-         if ( jsonData.encontro===true ){
+         // if ( jsonData.encontro===true ){
             let arrData = await jsonData.data.map( (item, index) => {
 
                // calcular el total en modificadores para el item actual
-               let totalMods =  item.item.modif.reduce( (total, mod) => {
-                  return parseFloat(total) + parseFloat(mod.total)
-               },0.0 ) || 0
+               // let totalMods =  item.item.modif.reduce( (total, mod) => {
+               //    return parseFloat(total) + parseFloat(mod.total)
+               // },0.0 ) || 0
 
-               totalMods = ( totalMods>0 ) ? parseFloat(item.item.total_vendido)+parseFloat(totalMods) : parseFloat(item.item.total_vendido)
+               // totalMods = ( totalMods>0 ) ? parseFloat(item.item.total_vendido)+parseFloat(totalMods) : parseFloat(item.item.total_vendido)
 
                return {
-                  'item':item.item.nombre,
-                  category:item.item.nombrecat,
-                  quantityItems: parseInt(item.item.cantidad_vendida, 10),
-                  quantityOrders: parseInt(item.item.cantidad_ordenes, 10),
-                  gross: parseFloat(totalMods).toFixed(2),
-                  discount: parseFloat(item.item.descuento).toFixed(2),
-                  net: (parseFloat(totalMods) - parseFloat(item.item.descuento)).toFixed(2),
-                  orderTax: parseFloat(item.item.tax).toFixed(2)
+                  orderId:item.id_cita,
+                  name:item.menu.nombre,
+                  price: parseFloat(item.precioSugerido).toFixed(2)
                }
 
             } )
-            // arrData.push({item:'decuentos generales en ordenes', quantityItems:0, quantityOrders:0, gross:0,discount:0,net:-65.14,orderTax:0})
-            await this.props.setSalesSummary(arrData)
-         }else{
-            alert(jsonData.error)
-         }
+            await this.props.setDaySummary(arrData)
+         // }else{
+         //    alert(jsonData.error)
+         // }
       } catch (err) {
          alert(err)
       }
    }
 
-    render(){
-        return (
-            <div className="container">
-                <div className='row'>
-                    <label className="form-check-label">
-                        <input className="form-check-input" type="checkbox" checked={this.state.activeRange} onChange={this.handleCheck}/> Range
-                    </label>
+   render(){
+      return (
+         <div className="container">
+            <div className='row'>
+               <label className="form-check-label">
+                  <input className="form-check-input" type="checkbox" checked={this.state.activeRange} onChange={this.handleCheck}/> Range
+               </label>
 
-                    {
-                        this.state.activeRange === false ?
+               {
+                  this.state.activeRange === false ?
 
-                    <SingleDatePicker
-                        date={this.state.startDate} //this.state.startDate
-                        focused={this.state.focused}
-                        onDateChange={this.onDateChange}
-                        onFocusChange={this.onFocusChange}
-                        displayFormat={utils.getDateFormat()}
-                        // isOutsideRange={date => date.year() !== moment()}
-                        isOutsideRange={() => false}
-                    />
-                    :
-                    <DateRangePicker
-                        startDate={this.state.startDate}
-                        endDate={this.state.endDate}
-                        onDatesChange={this.onDatesChange}
-                        onFocusChange={this.onFocusChange}
-                        focusedInput={this.state.focusedInput}
-                        displayFormat={utils.getDateFormat()}
-                        isOutsideRange={() => false}
-                        // isOutsideRange={date => date.year() !== moment()}
-                    />
-                    }
+                  <SingleDatePicker
+                     date={this.state.startDate} //this.state.startDate
+                     focused={this.state.focused}
+                     onDateChange={this.onDateChange}
+                     onFocusChange={this.onFocusChange}
+                     displayFormat={utils.getDateFormat()}
+                     // isOutsideRange={date => date.year() !== moment()}
+                     isOutsideRange={() => false}
+                  />
+                  :
+                  <DateRangePicker
+                     startDate={this.state.startDate}
+                     endDate={this.state.endDate}
+                     onDatesChange={this.onDatesChange}
+                     onFocusChange={this.onFocusChange}
+                     focusedInput={this.state.focusedInput}
+                     displayFormat={utils.getDateFormat()}
+                     isOutsideRange={() => false}
+                     // isOutsideRange={date => date.year() !== moment()}
+                  />
+               }
 
-                    <button
-                        type="button"
-                        className="btn btn-primary"
-                        disabled={this.state.disabledButtonSearch}
-                        onClick={this.loadResults}
-                    >Filter Data &nbsp;
-                        {this.state.fetchingData ? <i className="fa fa-spinner fa-spin"></i> : null}
-                    </button>
-
-                </div>
+               <button
+                  type="button"
+                  className="btn btn-primary"
+                  disabled={this.state.disabledButtonSearch}
+                  onClick={this.loadResults}
+                  >Filter Data &nbsp;
+                  {this.state.fetchingData ? <i className="fa fa-spinner fa-pulse"></i> : null}
+               </button>
 
             </div>
-        )
-    }
+
+         </div>
+      )
+   }
 }
 
 // Maps state from store to props
@@ -244,8 +236,8 @@ const mapStateToProps = (state, ownProps) => {
   // Maps actions to props
   const mapDispatchToProps = (dispatch) => {
     return {
-      setItemsSummary: data => dispatch(appActions.setItemsSummary(data)),
-      setSalesSummary: data => dispatch(appActions.setSalesSummary(data))
+      setSalesSummary: data => dispatch(appActions.setSalesSummary(data)),
+      setDaySummary: data => dispatch(appActions.setDaySummary(data))
     }
   };
 

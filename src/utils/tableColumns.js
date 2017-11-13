@@ -31,9 +31,13 @@ export const columns = {
       ]
    },
 
+
+
+
    daySummary: (data) => {
       return [
-         {Header:'idCita', accessor:'orderId', width: 300},
+         {Header:'idCita', accessor:'orderId'},
+         {Header:'Item', accessor:'name'},
          {Header:'amount',accessor:'price', Footer: (
             // <span>
             //   <strong>Average:</strong>{" "}

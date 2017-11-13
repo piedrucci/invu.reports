@@ -5,12 +5,12 @@ import {columns} from '../../utils/tableColumns'
 
 class DaySummaryReport extends Component{
    render( { AppInfo } = this.props ) {
-      const { activeModule, daySummaryData } = AppInfo
+      const { daySummaryData } = AppInfo
       return (
          <div>
          {
             daySummaryData.length>0?
-            <TableData dataSet={daySummaryData} headers={columns.sales(daySummaryData)} />
+            <TableData dataSet={daySummaryData} headers={columns.daySummary(daySummaryData)} />
             : null
          }
          </div>

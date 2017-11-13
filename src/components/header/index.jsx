@@ -4,24 +4,20 @@ import { connect } from 'react-redux';
 import * as appActions from '../../actions/appActions';
 
 class Header extends Component{
-  constructor(props) {
-    super(props)
-    this.state = {
-      franchiseName: '',
-      opt: props.AppInfo.activeModule,
-    }
-    this.setOptionMenu = this.setOptionMenu.bind(this)
-  }
+   constructor(props) {
+      super(props)
+      this.state = {
+         franchiseName: '',
+         opt: props.AppInfo.activeModule,
+      }
+      this.setOptionMenu = this.setOptionMenu.bind(this)
+   }
 
-  componentDidMount() {
-
-  }
-
-  setOptionMenu(opt) {
-    this.props.changeOptionMenu(opt)
-    this.setState({opt: opt})
-    // console.log(opt)
-  }
+   setOptionMenu = async(opt) => {
+      await this.props.changeOptionMenu(opt)
+      await this.setState({opt: opt})
+      // console.log(opt)
+   }
 
   render() {
     return (
