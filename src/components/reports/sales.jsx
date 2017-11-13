@@ -3,6 +3,7 @@ import TableData from '../tableData'
 import { connect } from 'react-redux'
 import {columns} from '../../utils/tableColumns'
 import { utils } from '../../utils/utils'
+import PDF from '../../utils/pdf'
 // import Modal from '../../utils/modal'
 
 class SalesReport extends Component{
@@ -19,6 +20,7 @@ class SalesReport extends Component{
                   <i className="fa fa-file-excel-o fa-2x" aria-hidden="true"></i>
                   Export &nbsp;
                </button>
+               <PDF />
             </div>
             : null
          }

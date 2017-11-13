@@ -219,6 +219,8 @@ class ToolBar extends Component{
                   {this.state.fetchingData ? <i className="fa fa-spinner fa-pulse"></i> : null}
                </button>
 
+               <button type="button">pdf</button>
+
             </div>
 
          </div>
