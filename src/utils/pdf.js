@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import * as pdf from 'jspdf'
+// import * as pdf from 'jspdf'
 
 
 
@@ -12,11 +12,12 @@ var rows = [
 
 class PDF extends Component {
    generatePdf = () => {
-      var doc = new pdf()
-
-      doc.text('Hello world!', 10, 10)
-      doc.autoTable(columns, rows);
-      doc.save('a4.pdf')
+      // var doc = new pdf()
+      //
+      // doc.text('Hello world!', 10, 10)
+      // doc.autoTable(columns, rows);
+      // doc.save('a4.pdf')
+      console.log('ssss')
    }
    render() {
       return (

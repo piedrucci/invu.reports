@@ -4,8 +4,8 @@ import FooterCell from '../components/tableData/footerCell'
 export const columns = {
    sales: (data) => {
       return [
-         {Header:'Item', accessor:'item', width: 300},
          {Header:'Category', accessor:'category', width: 200},
+         {Header:'Item', accessor:'item', width: 300},
          {Header:'Quantity',accessor:'quantityItems', Footer: (
             // <span>
             //   <strong>Average:</strong>{" "}
