@@ -116,33 +116,11 @@ class ToolBar extends Component{
     try{
       const response = await api.getItemsSummary( dates, apiKey )
       const jsonData = await response.json()
-      console.log(jsonData);
+      // console.log(jsonData);
 
       if ( jsonData.encontro===true ){
         await this.setState({tempData:jsonData.data})
         this.groupData()
-        // let arrData = await jsonData.data.map( (item, index) => {
-
-          // calcular el total en modificadores para el item actual
-          // let totalMods =  item.item.modif.reduce( (total, mod) => {
-          //   return parseFloat(total) + parseFloat(mod.total)
-          // },0.0 ) || 0
-          //
-          // totalMods = ( totalMods>0 ) ? (parseFloat(item.item.total_vendido)+parseFloat(totalMods)).toFixed(2) : parseFloat(item.item.total_vendido).toFixed(2)
-          //
-          // return {
-          //   'item':item.item.nombre,
-          //   category:item.item.nombrecat,
-          //   quantityItems: parseInt(item.item.cantidad_vendida, 10),
-          //   quantityOrders: parseInt(item.item.cantidad_ordenes, 10),
-          //   gross: parseFloat(totalMods),
-          //   discount: parseFloat( parseFloat(item.item.descuento).toFixed(2) ),
-          //   net: parseFloat( (parseFloat(totalMods) - parseFloat(item.item.descuento)).toFixed(2) ),
-          //   orderTax: parseFloat( (parseFloat(item.item.tax).toFixed(2)) )
-          // }
-
-        // } )
-        // await this.props.setSalesSummary(arrData)
       }else{
         alert(jsonData.error)
       }
@@ -188,7 +166,7 @@ class ToolBar extends Component{
     const groupName = event.target.value
     const data = this.props.AppInfo.salesSummaryData
     await this.setState({grouping: groupName})
-    this.groupData(this.props.AppInfo.salesSummaryData)
+    this.groupData()
   }
 
   groupData = async() => {
@@ -202,38 +180,47 @@ class ToolBar extends Component{
     }else {
       groupName = this.state.grouping
     }
-    console.log(`agrupando por: ${groupName}`);
+    console.log(`agrupando por: ${groupName}`)
 
     // agrupar por el campo seleccionado (groupName)
     let grouped = _.groupBy(this.state.tempData, (row)=> {
       return row.item[groupName]
     })
-    console.log(grouped)
-    // const arrayItems = _.map( grouped, (row) => {
-    //   let totalMods = 0
-    //   // calcular el total en modificadores para el item actual
-    //   if ( groupName==='nombre' ){
-    //     totalMods = row[0].item.modif.reduce( (total, mod) => {
-    //       return parseFloat(total) + parseFloat(mod.total)
-    //     },0.0 )
-    //   }
-    //
-    //   totalMods = ( totalMods>0 ) ? (parseFloat(row[0].item.total_vendido)+parseFloat(totalMods)).toFixed(2) : parseFloat(row[0].item.total_vendido).toFixed(2)
-    //
-    //   return {
-    //     item:row[0].item.nombre,
-    //     category:row[0].item.nombrecat,
-    //     quantityItems: parseInt(row[0].item.cantidad_vendida, 10),
-    //     quantityOrders: parseInt(row[0].item.cantidad_ordenes, 10),
-    //     gross: parseFloat(totalMods),
-    //     discount: parseFloat( parseFloat(row[0].item.descuento).toFixed(2) ),
-    //     net: parseFloat( (parseFloat(totalMods) - parseFloat(row[0].item.descuento)).toFixed(2) ),
-    //     orderTax: parseFloat( (parseFloat(row[0].item.tax).toFixed(2)) )
-    //   }
-    //
-    // } )
+    // console.log(grouped)
 
-    // await this.props.setSalesSummary(arrayItems)
+    const arrayItems = _.map( grouped, (row) => {
+      let rowInfo = null
+      if ( groupName === 'nombre' ) { rowInfo = row[0] }
+      if ( groupName === 'nombrecat' ) { rowInfo = row[0] }
+
+      // console.log(rowInfo)
+
+      let totalMods = 0
+      // calcular el total en modificadores para el item actual
+      if ( groupName === 'nombre' ){
+        totalMods = rowInfo.item.modif.reduce( (total, mod) => {
+          return parseFloat(total) + parseFloat(mod.total)
+        },0.0 )
+      }
+
+      totalMods = ( totalMods>0 ) ? (parseFloat(rowInfo.item.total_vendido)+parseFloat(totalMods)).toFixed(2) : parseFloat(rowInfo.item.total_vendido).toFixed(2)
+
+      let itemInfo = {
+        item:rowInfo.item.nombre,
+        category:rowInfo.item.nombrecat,
+        quantityItems: parseInt(rowInfo.item.cantidad_vendida, 10),
+        quantityOrders: parseInt(rowInfo.item.cantidad_ordenes, 10),
+        gross: parseFloat(totalMods),
+        discount: parseFloat( parseFloat(rowInfo.item.descuento).toFixed(2) ),
+        net: parseFloat( (parseFloat(totalMods) - parseFloat(rowInfo.item.descuento)).toFixed(2) ),
+        orderTax: parseFloat( (parseFloat(rowInfo.item.tax).toFixed(2)) )
+      }
+
+      return itemInfo
+
+    } )
+
+    await this.props.setSalesSummary(arrayItems)
     // console.log(arrayItems)
 
   }
