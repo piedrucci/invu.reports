@@ -6,7 +6,7 @@ import moment from 'moment'
 import {utils, api} from '../../utils/utils'
 import { connect } from 'react-redux';
 import * as appActions from '../../actions/appActions'
-import { ProcessSales } from './calculateData'
+import { ProcessSales, ProcessDaySummary } from './calculateData'
 
 const apiKey = "bd_yogenmultiplazapos"
 
@@ -90,13 +90,13 @@ class ToolBar extends Component{
 
     switch (this.props.AppInfo.activeModule){
       case 1:
-      await this.loadSales(dates)
-      break
+        await this.loadSales(dates)
+        break
       case 2:
-      await this.loadDaySummary(dates)
-      break
+        await this.loadDaySummary(dates)
+        break
       default:
-      break
+        break
     }
 
     this.toggleFetchData(false)
@@ -133,29 +133,14 @@ class ToolBar extends Component{
   loadDaySummary = async(dates) => {
     try{
       const response = await api.getDaySummary( dates, apiKey )
-      // console.log(response.status);
       const jsonData = await response.json()
-      // if ( jsonData.encontro===true ){
-      let arrData = await jsonData.data.map( (item, index) => {
 
-        // calcular el total en modificadores para el item actual
-        // let totalMods =  item.item.modif.reduce( (total, mod) => {
-        //    return parseFloat(total) + parseFloat(mod.total)
-        // },0.0 ) || 0
-
-        // totalMods = ( totalMods>0 ) ? parseFloat(item.item.total_vendido)+parseFloat(totalMods) : parseFloat(item.item.total_vendido)
-
-        return {
-          orderId:item.id_cita,
-          name:item.menu.nombre,
-          price: parseFloat(item.precioSugerido).toFixed(2)
-        }
-
-      } )
-      await this.props.setDaySummary(arrData)
-      // }else{
-      //    alert(jsonData.error)
-      // }
+      if ( jsonData.encontro===true ){
+        await this.setState({tempData:jsonData.data})
+        this.groupData()
+      }else{
+         alert(jsonData.error)
+      }
     } catch (err) {
       alert(err)
     }
@@ -180,8 +165,9 @@ class ToolBar extends Component{
     }
     console.log(`agrupando por: ${groupName}`)
 
-    await this.props.setSalesSummary( ProcessSales(groupName, this.state.tempData) )
-    // console.log(arrayItems)
+    console.log(this.props.AppInfo.activeModule)
+    if (this.props.AppInfo.activeModule === 1) {await this.props.setSalesSummary( ProcessSales(groupName, this.state.tempData) )}
+    if (this.props.AppInfo.activeModule === 2) {await this.props.setDaySummary( ProcessDaySummary(groupName, this.state.tempData) )}
   }
 
 
@@ -260,7 +246,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     setSalesSummary: data => dispatch(appActions.setSalesSummary(data)),
-    setDaySummary: data => dispatch(appActions.setDaySummary(data))
+    setDaySummary  : data => dispatch(appActions.setDaySummary(data))
   }
 };
 

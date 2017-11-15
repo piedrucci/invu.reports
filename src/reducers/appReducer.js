@@ -1,4 +1,3 @@
-// import React , { Component}  from 'react'
 import * as appActions from '../actions/appActions'
 
 const initialState = {

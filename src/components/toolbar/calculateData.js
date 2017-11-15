@@ -36,6 +36,7 @@ export const ProcessSales = (groupName, data) => {
       orderTax: parseFloat( (parseFloat(rowInfo.item.tax).toFixed(2)) )
     }
 
+    // agrupar por categoria
     if ( row.length>1 ) {
       itemInfo.item = "------"
       row.map( (item, index) => {
@@ -60,4 +61,24 @@ export const ProcessSales = (groupName, data) => {
   } )
 
   return arrayItems
+}
+
+export const ProcessDaySummary = (groupName, data) => {
+  let arrData =  data.map( (item, index) => {
+    // calcular el total en modificadores para el item actual
+    // let totalMods =  item.item.modif.reduce( (total, mod) => {
+    //    return parseFloat(total) + parseFloat(mod.total)
+    // },0.0 ) || 0
+
+    // totalMods = ( totalMods>0 ) ? parseFloat(item.item.total_vendido)+parseFloat(totalMods) : parseFloat(item.item.total_vendido)
+
+    return {
+      orderId:item.item.nombrecat,
+      item:item.item.nombre,
+      price: parseFloat(item.item.total_vendido).toFixed(2)
+    }
+
+  } )
+  console.log(arrData)
+  return arrData
 }

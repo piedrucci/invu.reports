@@ -9,6 +9,7 @@ import { utils } from '../../utils/utils'
 class SalesReport extends Component{
   render( { AppInfo } = this.props ) {
     const { salesSummaryData } = AppInfo
+    console.log(salesSummaryData)
     return (
       <div>
         {
