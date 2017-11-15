@@ -6,7 +6,7 @@ import moment from 'moment'
 import {utils, api} from '../../utils/utils'
 import { connect } from 'react-redux';
 import * as appActions from '../../actions/appActions'
-import _ from 'lodash'
+import { ProcessSales } from './calculateData'
 
 const apiKey = "bd_yogenmultiplazapos"
 
@@ -164,13 +164,11 @@ class ToolBar extends Component{
 
   changeGroup = async(event) => {
     const groupName = event.target.value
-    const data = this.props.AppInfo.salesSummaryData
     await this.setState({grouping: groupName})
     this.groupData()
   }
 
   groupData = async() => {
-    // console.log(data);
     let groupName = 'nombre'
 
     if ( this.state.grouping === 'item' ) {
@@ -182,47 +180,8 @@ class ToolBar extends Component{
     }
     console.log(`agrupando por: ${groupName}`)
 
-    // agrupar por el campo seleccionado (groupName)
-    let grouped = _.groupBy(this.state.tempData, (row)=> {
-      return row.item[groupName]
-    })
-    // console.log(grouped)
-
-    const arrayItems = _.map( grouped, (row) => {
-      let rowInfo = null
-      if ( groupName === 'nombre' ) { rowInfo = row[0] }
-      if ( groupName === 'nombrecat' ) { rowInfo = row[0] }
-
-      // console.log(rowInfo)
-
-      let totalMods = 0
-      // calcular el total en modificadores para el item actual
-      if ( groupName === 'nombre' ){
-        totalMods = rowInfo.item.modif.reduce( (total, mod) => {
-          return parseFloat(total) + parseFloat(mod.total)
-        },0.0 )
-      }
-
-      totalMods = ( totalMods>0 ) ? (parseFloat(rowInfo.item.total_vendido)+parseFloat(totalMods)).toFixed(2) : parseFloat(rowInfo.item.total_vendido).toFixed(2)
-
-      let itemInfo = {
-        item:rowInfo.item.nombre,
-        category:rowInfo.item.nombrecat,
-        quantityItems: parseInt(rowInfo.item.cantidad_vendida, 10),
-        quantityOrders: parseInt(rowInfo.item.cantidad_ordenes, 10),
-        gross: parseFloat(totalMods),
-        discount: parseFloat( parseFloat(rowInfo.item.descuento).toFixed(2) ),
-        net: parseFloat( (parseFloat(totalMods) - parseFloat(rowInfo.item.descuento)).toFixed(2) ),
-        orderTax: parseFloat( (parseFloat(rowInfo.item.tax).toFixed(2)) )
-      }
-
-      return itemInfo
-
-    } )
-
-    await this.props.setSalesSummary(arrayItems)
+    await this.props.setSalesSummary( ProcessSales(groupName, this.state.tempData) )
     // console.log(arrayItems)
-
   }
 
 
