@@ -3,7 +3,8 @@ import * as appActions from '../actions/appActions'
 const initialState = {
     activeModule: 1,
     salesSummaryData: [],
-    daySummaryData: []
+    daySummaryData: [],
+    paymentsDaySummary: []
  }
 
 
@@ -18,6 +19,9 @@ const initialState = {
 
       case appActions.SET_DAY_SUMMARY:
          return {...state, daySummaryData: action.payload}
+
+      case appActions.SET_PAYMENTS_DAY_SUMMARY:
+         return {...state, paymentsDaySummary: action.payload}
 
     //    case SET_SESSION:
     //       // console.log(action.s)

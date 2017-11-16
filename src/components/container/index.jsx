@@ -21,7 +21,7 @@ const Container = () => (
       <Route exact path='/' component={SalesReport}/>
       {/* <Route path='/dashboard' component={ChartContainer}/> */}
       <Route path='/sales'     component={SalesReport}/>
-      <Route path='/daysumary' component={DaySummaryReport  }/>
+      <Route path='/daysumary' component={DaySummaryReport}/>
       {/* <Redirect from="/" to="/sales"/> */}
     </Switch>
   </main>

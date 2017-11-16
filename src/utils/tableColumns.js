@@ -34,17 +34,15 @@ export const columns = {
 
 
 
-   daySummary: (data) => {
-      return [
-         {Header:'Categoy', accessor:'orderId'},
-         {Header:'Item', accessor:'item'},
-         {Header:'amount',accessor:'price', Footer: (
-            // <span>
-            //   <strong>Average:</strong>{" "}
-            //   {_.round(_.mean(_.map(this.props.AppInfo.itemsSummaryData, d => d.quantityItems)))}
-            // </span>
-            <FooterCell dataSet={data} options={{isInt:false,groupKey:'price'}}/>
-         )},
-      ]
-   }
+  daySummary: (data) => {
+    return [
+      {Header:'Item', accessor:'item'},
+      {Header:'Quantity', accessor:'quantityItems', Footer: (
+         <FooterCell dataSet={data} options={{isInt:true,groupKey:'quantityItems'}}/>
+      )},
+      {Header:'amount',accessor:'price', Footer: (
+         <FooterCell dataSet={data} options={{isInt:false,groupKey:'price'}}/>
+      )},
+    ]
+  }
 }

@@ -3,6 +3,9 @@ const alasql = window.alasql
 let dateFormat = "MM-DD-YYYY"
 let endPoint = "https://api.invupos.com/invuApiPos/index.php?r="
 
+const testApiKey = "bd_yogenmultiplazapos"
+// const testApiKey = "bd_lcaesarsvzaita"
+
 export const utils = {
 
 
@@ -50,20 +53,27 @@ export const api =
   getItemsSummary(jsonDates, apiKey) {
     const fullPath = endPoint + 'citas/TotalesItemsVendidosFechas/fini/' + jsonDates.startingDate + '/ffin/' + jsonDates.endingDate
     // const fullPath = endPoint + 'citas/TotalesItemsVendidosHoras/fini/' + jsonDates.startingDate + '/ffin/' + jsonDates.endingDate
-    const response = fetch( fullPath, { headers: { 'APIKEY': apiKey } }) //.then((data)=>{return data}).catch((error)=>{return error})
+    const response = fetch( fullPath, { headers: { 'APIKEY': testApiKey } }) //.then((data)=>{return data}).catch((error)=>{return error})
     return response
   },
 
   getDaySummary(fechas, apiKey) {
     // const response = fetch( endPoint + 'citas/ItemsVendidosFechas/fini/' + fechas.startingDate + '/ffin/' + fechas.endingDate,
-    const response = fetch( endPoint + 'citas/TotalesItemsVendidosHoras/fini/' + fechas.startingDate + '/ffin/' + fechas.endingDate,
-    { headers: { 'APIKEY': apiKey } })
+    // const response = fetch( endPoint + 'citas/TotalesItemsVendidosHoras/fini/' + fechas.startingDate + '/ffin/' + fechas.endingDate,
+    const response = fetch( endPoint + 'citas/TotalesItemsVendidosFechas/fini/' + fechas.startingDate + '/ffin/' + fechas.endingDate,
+    { headers: { 'APIKEY': testApiKey } })
     return response
   },
 
   getItems(jsonDates, apiKey) {
     const fullPath = endPoint + 'citas/ItemsVendidosFechas/fini/' + jsonDates.startingDate + '/ffin/' + jsonDates.endingDate
-    const response = fetch( fullPath, { headers: { 'APIKEY': apiKey } })
+    const response = fetch( fullPath, { headers: { 'APIKEY': testApiKey } })
+    return response
+  },
+
+  getPayments(jsonDates, apiKey) {
+    const fullPath = endPoint + 'citas/TotalesPagosFechas/fini/' + jsonDates.startingDate + '/ffin/' + jsonDates.endingDate
+    const response = fetch( fullPath, { headers: { 'APIKEY': testApiKey } })
     return response
   },
 

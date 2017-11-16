@@ -23,7 +23,10 @@ export const ProcessSales = (groupName, data) => {
       },0.0 )
     }
 
-    totalMods = ( totalMods>0 ) ? (parseFloat(rowInfo.item.total_vendido)+parseFloat(totalMods)).toFixed(2) : parseFloat(rowInfo.item.total_vendido).toFixed(2)
+    totalMods = ( totalMods!==0 ) ? (parseFloat(rowInfo.item.total_vendido)+parseFloat(totalMods)).toFixed(2) : parseFloat(rowInfo.item.total_vendido).toFixed(2)
+
+    const discount =  parseFloat( (rowInfo.item.descuento).toFixed(2) )
+    const net = parseFloat( parseFloat(totalMods) - discount )
 
     let itemInfo = {
       item:rowInfo.item.nombre,
@@ -31,9 +34,9 @@ export const ProcessSales = (groupName, data) => {
       quantityItems: parseInt(rowInfo.item.cantidad_vendida, 10),
       quantityOrders: parseInt(rowInfo.item.cantidad_ordenes, 10),
       gross: parseFloat(totalMods),
-      discount: parseFloat( parseFloat(rowInfo.item.descuento).toFixed(2) ),
-      net: parseFloat( (parseFloat(totalMods) - parseFloat(rowInfo.item.descuento)).toFixed(2) ),
-      orderTax: parseFloat( (parseFloat(rowInfo.item.tax).toFixed(2)) )
+      discount: discount,
+      net: net,
+      orderTax: parseFloat( (rowInfo.item.tax).toFixed(2) )
     }
 
     // agrupar por categoria
@@ -63,22 +66,27 @@ export const ProcessSales = (groupName, data) => {
   return arrayItems
 }
 
+
+
 export const ProcessDaySummary = (groupName, data) => {
   let arrData =  data.map( (item, index) => {
     // calcular el total en modificadores para el item actual
-    // let totalMods =  item.item.modif.reduce( (total, mod) => {
-    //    return parseFloat(total) + parseFloat(mod.total)
-    // },0.0 ) || 0
+    let totalMods =  item.item.modif.reduce( (total, mod) => {
+      // console.log(`tiene modificador... `)
+      // console.log(mod)
+      return parseFloat(total) + parseFloat(mod.total)
+    },0.0 ) || 0
 
-    // totalMods = ( totalMods>0 ) ? parseFloat(item.item.total_vendido)+parseFloat(totalMods) : parseFloat(item.item.total_vendido)
+    totalMods = ( totalMods!==0 ) ? parseFloat(item.item.total_vendido)+parseFloat(totalMods) : parseFloat(item.item.total_vendido)
 
-    return {
-      orderId:item.item.nombrecat,
+    const rowInfo = {
       item:item.item.nombre,
-      price: parseFloat(item.item.total_vendido).toFixed(2)
+      quantityItems:parseInt(item.item.cantidad_vendida, 10),
+      price: parseFloat((totalMods).toFixed(2))
     }
 
+    return rowInfo
   } )
-  console.log(arrData)
+
   return arrData
 }

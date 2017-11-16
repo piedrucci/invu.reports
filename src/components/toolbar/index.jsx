@@ -8,8 +8,6 @@ import { connect } from 'react-redux';
 import * as appActions from '../../actions/appActions'
 import { ProcessSales, ProcessDaySummary } from './calculateData'
 
-const apiKey = "bd_yogenmultiplazapos"
-
 class ToolBar extends Component{
   constructor(props){
     super(props)
@@ -114,7 +112,7 @@ class ToolBar extends Component{
 
   loadSales = async(dates) => {
     try{
-      const response = await api.getItemsSummary( dates, apiKey )
+      const response = await api.getItemsSummary( dates, "" )
       const jsonData = await response.json()
       // console.log(jsonData);
 
@@ -132,11 +130,17 @@ class ToolBar extends Component{
 
   loadDaySummary = async(dates) => {
     try{
-      const response = await api.getDaySummary( dates, apiKey )
+      const response = await api.getDaySummary( dates, "" )
       const jsonData = await response.json()
 
       if ( jsonData.encontro===true ){
         await this.setState({tempData:jsonData.data})
+
+        const paymentsInfoRequest = await api.getPayments(dates, "")
+        const paymentsInfo = await paymentsInfoRequest.json()
+        // console.log(paymentsInfo)
+        await this.props.setPaymentsDaySummary(paymentsInfo)
+
         this.groupData()
       }else{
          alert(jsonData.error)
@@ -171,7 +175,8 @@ class ToolBar extends Component{
   }
 
 
-  render(){
+  render( { AppInfo } = this.props ){
+    const { activeModule } = AppInfo
     return (
       <div className="container-fluid">
         <br />
@@ -181,9 +186,13 @@ class ToolBar extends Component{
 
             <form className="form-inline">
 
-              <label className="form-check-label">
-                <input className="form-check-input" type="checkbox" checked={this.state.activeRange} onChange={this.handleCheck}/> Range
-              </label>
+              {
+                activeModule === 1 ?
+                <label className="form-check-label">
+                  <input className="form-check-input" type="checkbox" checked={this.state.activeRange} onChange={this.handleCheck}/> Range
+                </label>
+                :null
+              }
 
               {
                 this.state.activeRange === false ?
@@ -219,10 +228,14 @@ class ToolBar extends Component{
                 {this.state.fetchingData ? <i className="fa fa-spinner fa-pulse"></i> : null}
               </button>
 
-              <select value={this.state.grouping} onChange={this.changeGroup} className="form-control" >
-                <option value="item">No Grouping</option>
-                <option value="category">Categoy</option>
-              </select>
+              {
+                activeModule === 1 ?
+                <select value={this.state.grouping} onChange={this.changeGroup} className="form-control" >
+                  <option value="item">No Grouping</option>
+                  <option value="category">Categoy</option>
+                </select>
+                : null
+              }
 
             </form>
 
@@ -246,7 +259,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     setSalesSummary: data => dispatch(appActions.setSalesSummary(data)),
-    setDaySummary  : data => dispatch(appActions.setDaySummary(data))
+    setDaySummary  : data => dispatch(appActions.setDaySummary(data)),
+    setPaymentsDaySummary  : data => dispatch(appActions.setPaymentsDaySummary(data))
   }
 };
 
