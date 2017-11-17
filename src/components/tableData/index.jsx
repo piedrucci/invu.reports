@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 class TableData extends Component {
    render() {
@@ -10,12 +11,25 @@ class TableData extends Component {
             data={this.props.dataSet}
             columns={this.props.headers}
             pageSizeOptions={[5, 10, 20, 25, 50, 100]}
-            defaultPageSize={20}
+            defaultPageSize={this.props.pageSize}
             className="-striped -highlight"
          />
       )
    }
 }
+
+TableData.defaultProps = {
+  pageSize: 50,
+  dataSet: [],
+  headers: [],
+};
+
+TableData.propTypes = {
+  pageSize: PropTypes.number,
+  dataSet: PropTypes.array.isRequired,
+  headers: PropTypes.array.isRequired,
+}
+
 
 // Maps state from store to props
 const mapStateToProps = (state, ownProps) => {

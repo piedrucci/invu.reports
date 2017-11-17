@@ -9,14 +9,17 @@ import { utils } from '../../utils/utils'
 class SalesReport extends Component{
   render( { AppInfo } = this.props ) {
     const { salesSummaryData } = AppInfo
-    console.log(salesSummaryData)
     return (
       <div>
         {
           salesSummaryData.length>0?
           <div>
             <br />
-            <TableData dataSet={salesSummaryData} headers={columns.sales(salesSummaryData)} />
+            <TableData
+              dataSet={salesSummaryData}
+              headers={columns.sales(salesSummaryData)}
+              // pageSize={100}
+            />
 
             <br />
             <div className="col-sm-12 text-center">

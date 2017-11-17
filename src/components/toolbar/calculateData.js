@@ -17,16 +17,16 @@ export const ProcessSales = (groupName, data) => {
 
     let totalMods = 0
     // calcular el total en modificadores para el item actual
-    if ( groupName === 'nombre' ){
+    // if ( groupName === 'nombre' ){
       totalMods = rowInfo.item.modif.reduce( (total, mod) => {
         return parseFloat(total) + parseFloat(mod.total)
       },0.0 )
-    }
+    // }
 
-    totalMods = ( totalMods!==0 ) ? (parseFloat(rowInfo.item.total_vendido)+parseFloat(totalMods)).toFixed(2) : parseFloat(rowInfo.item.total_vendido).toFixed(2)
+    totalMods = ( totalMods!==0 ) ? (parseFloat(rowInfo.item.total_vendido)+parseFloat(totalMods)).toFixed(2) : (rowInfo.item.total_vendido).toFixed(2)
 
-    const discount =  parseFloat( (rowInfo.item.descuento).toFixed(2) )
-    const net = parseFloat( parseFloat(totalMods) - discount )
+    const discount =  (rowInfo.item.descuento).toFixed(2)
+    const net = ( parseFloat(totalMods) - discount ).toFixed(2)
 
     let itemInfo = {
       item:rowInfo.item.nombre,
@@ -34,8 +34,8 @@ export const ProcessSales = (groupName, data) => {
       quantityItems: parseInt(rowInfo.item.cantidad_vendida, 10),
       quantityOrders: parseInt(rowInfo.item.cantidad_ordenes, 10),
       gross: parseFloat(totalMods),
-      discount: discount,
-      net: net,
+      discount: parseFloat(discount),
+      net: parseFloat(net),
       orderTax: parseFloat( (rowInfo.item.tax).toFixed(2) )
     }
 
@@ -44,17 +44,24 @@ export const ProcessSales = (groupName, data) => {
       itemInfo.item = "------"
       row.map( (item, index) => {
         if (index>0){
+          totalMods = 0
+          // totalMods = item.item.modif.reduce( (total, mod) => {
+          //   return parseFloat(total) + parseFloat(mod.total)
+          // },0.0 )
+
           itemInfo.quantityItems = parseInt(itemInfo.quantityItems, 10) + parseInt(item.item.cantidad_vendida, 10)
           itemInfo.quantityOrders = parseInt(itemInfo.quantityOrders, 10) + parseInt(item.item.cantidad_ordenes, 10)
 
           const itemGross = ( parseFloat(itemInfo.gross) + parseFloat(item.item.total_vendido) ).toFixed(2)
-          itemInfo.gross = parseFloat(itemGross)
+          itemInfo.gross = parseFloat(itemGross) + totalMods
 
-          itemInfo.discount = parseFloat( itemInfo.discount ) + parseFloat( parseFloat(item.item.descuento).toFixed(2) )
+          itemInfo.discount = parseFloat( itemInfo.discount ) + parseFloat( (item.item.descuento).toFixed(2) )
 
           const itemNet = ( parseFloat(itemInfo.net) + parseFloat( (parseFloat(item.item.total_vendido) - parseFloat(item.item.descuento)).toFixed(2) ) ).toFixed(2)
           itemInfo.net = parseFloat( itemNet )
           itemInfo.orderTax = parseFloat(itemInfo.orderTax) + parseFloat( (item.item.tax).toFixed(2) )
+
+
         }
       } )
     }
@@ -81,7 +88,8 @@ export const ProcessDaySummary = (groupName, data) => {
 
     const rowInfo = {
       item:item.item.nombre,
-      quantityItems:parseInt(item.item.cantidad_vendida, 10),
+      quantityItems:parseInt(item.item.cantidad_ordenes, 10),
+      discount: parseFloat(item.item.descuento),
       price: parseFloat((totalMods).toFixed(2))
     }
 

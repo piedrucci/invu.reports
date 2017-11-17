@@ -116,7 +116,6 @@ class ToolBar extends Component{
     try{
       const response = await api.getItemsSummary( dates, "" )
       const jsonData = await response.json()
-      // console.log(jsonData);
 
       if ( jsonData.encontro===true ){
         await this.setState({tempData:jsonData.data})
@@ -137,7 +136,9 @@ class ToolBar extends Component{
 
       if ( jsonData.encontro===true ){
         await this.setState({tempData:jsonData.data})
+        await this.props.setDiscountsDaySummary(jsonData.desc)
         await this.groupData()
+
       }else{
          alert(jsonData.error)
       }
@@ -166,14 +167,14 @@ class ToolBar extends Component{
     console.log(`agrupando por: ${groupName}`)
 
     if (this.props.AppInfo.activeModule === 1) {await this.props.setSalesSummary( ProcessSales(groupName, this.state.tempData) )}
+
     if (this.props.AppInfo.activeModule === 2) {
       await this.props.setDaySummary( ProcessDaySummary(groupName, this.state.tempData) )
 
-        const paymentsInfoRequest = await api.getPayments(this.state.epochDates, "")
-        const paymentsInfo = await paymentsInfoRequest.json()
-      //   console.log('pagos cargados')
-        await this.props.setPaymentsDaySummary(paymentsInfo.data)
-      // await this.props.setDaySummary( ProcessDaySummary(groupName, this.state.tempData) )
+      // obtener los metodos de pago (payments)
+      const paymentsInfoRequest = await api.getPayments(this.state.epochDates, "")
+      const paymentsInfo = await paymentsInfoRequest.json()
+      await this.props.setPaymentsDaySummary(paymentsInfo.data)
    }
   }
 
@@ -262,8 +263,11 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     setSalesSummary: data => dispatch(appActions.setSalesSummary(data)),
+
     setDaySummary  : data => dispatch(appActions.setDaySummary(data)),
-    setPaymentsDaySummary  : data => dispatch(appActions.setPaymentsDaySummary(data))
+    setPaymentsDaySummary  : data => dispatch(appActions.setPaymentsDaySummary(data)),
+    setDiscountsDaySummary  : data => dispatch(appActions.setDiscountsDaySummary(data)),
+
   }
 };
 

@@ -37,10 +37,13 @@ export const columns = {
   daySummary: (data) => {
     return [
       {Header:'Item', accessor:'item'},
-      {Header:'Quantity', accessor:'quantityItems', Footer: (
+      {Header:'Orders', accessor:'quantityItems', Footer: (
          <FooterCell dataSet={data} options={{isInt:true,groupKey:'quantityItems'}}/>
       )},
-      {Header:'amount',accessor:'price', Footer: (
+      {Header:'Discount',accessor:'discount', Footer: (
+         <FooterCell dataSet={data} options={{isInt:false,groupKey:'discount'}}/>
+      )},
+      {Header:'Amount',accessor:'price', Footer: (
          <FooterCell dataSet={data} options={{isInt:false,groupKey:'price'}}/>
       )},
     ]
