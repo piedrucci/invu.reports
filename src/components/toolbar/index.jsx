@@ -21,7 +21,8 @@ class ToolBar extends Component{
       fetchingData: false,
 
       tempData: null,
-      grouping: 'item'
+      grouping: 'item',
+      epochDates: null
     }
     this.onDateChange  = this.onDateChange.bind(this)
     this.onDatesChange = this.onDatesChange.bind(this)
@@ -85,6 +86,7 @@ class ToolBar extends Component{
       startingDate: epochStartingDate[0],
       endingDate: (this.state.activeRange) ? epochEndingDate[1] : epochStartingDate[1]
     }
+    await this.setState({epochDates: dates})
 
     switch (this.props.AppInfo.activeModule){
       case 1:
@@ -135,13 +137,7 @@ class ToolBar extends Component{
 
       if ( jsonData.encontro===true ){
         await this.setState({tempData:jsonData.data})
-
-        const paymentsInfoRequest = await api.getPayments(dates, "")
-        const paymentsInfo = await paymentsInfoRequest.json()
-        // console.log(paymentsInfo)
-        await this.props.setPaymentsDaySummary(paymentsInfo)
-
-        this.groupData()
+        await this.groupData()
       }else{
          alert(jsonData.error)
       }
@@ -169,9 +165,16 @@ class ToolBar extends Component{
     }
     console.log(`agrupando por: ${groupName}`)
 
-    console.log(this.props.AppInfo.activeModule)
     if (this.props.AppInfo.activeModule === 1) {await this.props.setSalesSummary( ProcessSales(groupName, this.state.tempData) )}
-    if (this.props.AppInfo.activeModule === 2) {await this.props.setDaySummary( ProcessDaySummary(groupName, this.state.tempData) )}
+    if (this.props.AppInfo.activeModule === 2) {
+      await this.props.setDaySummary( ProcessDaySummary(groupName, this.state.tempData) )
+
+        const paymentsInfoRequest = await api.getPayments(this.state.epochDates, "")
+        const paymentsInfo = await paymentsInfoRequest.json()
+      //   console.log('pagos cargados')
+        await this.props.setPaymentsDaySummary(paymentsInfo.data)
+      // await this.props.setDaySummary( ProcessDaySummary(groupName, this.state.tempData) )
+   }
   }
 
 

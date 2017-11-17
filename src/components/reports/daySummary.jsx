@@ -5,19 +5,20 @@ import {columns} from '../../utils/tableColumns'
 import { utils } from '../../utils/utils'
 
 class DaySummaryReport extends Component{
+
   render( { AppInfo } = this.props ) {
-    const { daySummaryData, paymentsDaySummary } = AppInfo
-    console.log(paymentsDaySummary)
-    let payments = null
-    if ( paymentsDaySummary.length > 0 ){
-      payments = paymentsDaySummary.map( (pay, index) => {
-        // return (<tr>
-        //   <td>{pay.metodoPago}</td>
-        //   <td>{pay.tipoPago}</td>
-        //   <td>{pay.total}</td>
-        // </tr>)
-        console.log(pay)
-      } )
+      const { daySummaryData, paymentsDaySummary } = AppInfo
+
+      let payments = null
+      if ( paymentsDaySummary.length > 0 ){
+           payments = paymentsDaySummary.map( (pay, index) => {
+           return (<tr key={index}>
+             <td>{pay.metodoPago}</td>
+             <td>{pay.tipoPago}</td>
+             <td className="text-right">{pay.total}</td>
+           </tr>)
+         //   console.log(pay)
+         } )
     }
 
     return (
