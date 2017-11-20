@@ -6,7 +6,10 @@ import moment from 'moment'
 import {utils, api} from '../../utils/utils'
 import { connect } from 'react-redux';
 import * as appActions from '../../actions/appActions'
-import { ProcessSales, ProcessDaySummary } from './calculateData'
+import {
+  ProcessSales,
+  ProcessDaySummary,
+  ProcessHours } from './calculateData'
 
 class ToolBar extends Component{
   constructor(props){
@@ -21,6 +24,7 @@ class ToolBar extends Component{
       fetchingData: false,
 
       tempData: null,
+      salesGrouping: 'item',
       grouping: 'item',
       epochDates: null
     }
@@ -90,13 +94,13 @@ class ToolBar extends Component{
 
     switch (this.props.AppInfo.activeModule){
       case 1:
-        await this.loadSales(dates)
+        await this.loadSales()
         break
       case 2:
-        await this.loadDaySummary(dates)
+        await this.loadDaySummary()
         break
       case 3:
-        await this.loadDaySummary(dates)
+        await this.loadHours()
         break
       default:
         break
@@ -115,9 +119,10 @@ class ToolBar extends Component{
     )
   }
 
-  loadSales = async(dates) => {
+  loadSales = async() => {
     try{
-      const response = await api.getItemsSummary( dates, "" )
+      await this.setState({grouping:this.state.salesGrouping})
+      const response = await api.getItemsSummary( this.state.epochDates, "" )
       const jsonData = await response.json()
 
       if ( jsonData.encontro===true ){
@@ -131,9 +136,10 @@ class ToolBar extends Component{
     }
   }
 
-  loadHours = async(dates) => {
+  loadHours = async() => {
     try{
-      const response = await api.getHoursSummary( dates, "" )
+      await this.setState({grouping:'item'})
+      const response = await api.getHoursSummary( this.state.epochDates, "" )
       const jsonData = await response.json()
 
       if ( jsonData.encontro===true ){
@@ -148,14 +154,13 @@ class ToolBar extends Component{
   }
 
 
-  loadDaySummary = async(dates) => {
+  loadDaySummary = async() => {
     try{
-      const response = await api.getDaySummary( dates, "" )
+      const response = await api.getDaySummary( this.state.epochDates, "" )
       const jsonData = await response.json()
 
       if ( jsonData.encontro===true ){
         await this.setState({tempData:jsonData.data})
-        await this.props.setDiscountsDaySummary(jsonData.desc)
         await this.groupData()
 
       }else{
@@ -169,7 +174,7 @@ class ToolBar extends Component{
 
   changeGroup = async(event) => {
     const groupName = event.target.value
-    await this.setState({grouping: groupName})
+    await this.setState({salesGrouping: groupName, grouping: groupName})
     this.groupData()
   }
 
@@ -185,6 +190,7 @@ class ToolBar extends Component{
     }
     console.log(`agrupando por: ${groupName}`)
 
+    // enviar al store los datos que muestra el reporte....
     if (this.props.AppInfo.activeModule === 1) {await this.props.setSalesSummary( ProcessSales(groupName, this.state.tempData) )}
 
     if (this.props.AppInfo.activeModule === 2) {
@@ -194,7 +200,19 @@ class ToolBar extends Component{
       const paymentsInfoRequest = await api.getPayments(this.state.epochDates, "")
       const paymentsInfo = await paymentsInfoRequest.json()
       await this.props.setPaymentsDaySummary(paymentsInfo.data)
+
+      // desglose de descuentos (discounts)
+      const discountsRequest = await api.getDiscounts(this.state.epochDates, "")
+      const discountsInfo = await discountsRequest.json()
+      await this.props.setDiscountsDaySummary(discountsInfo)
+
+
    }
+
+   if (this.props.AppInfo.activeModule === 3) {
+     await this.props.setHoursSummary( ProcessHours(groupName, this.state.tempData) )
+   }
+
   }
 
 
@@ -253,7 +271,7 @@ class ToolBar extends Component{
 
               {
                 activeModule === 1 ?
-                <select value={this.state.grouping} onChange={this.changeGroup} className="form-control" >
+                <select value={this.state.salesGrouping} onChange={this.changeGroup} className="form-control" >
                   <option value="item">No Grouping</option>
                   <option value="category">Categoy</option>
                 </select>
@@ -286,6 +304,8 @@ const mapDispatchToProps = (dispatch) => {
     setDaySummary  : data => dispatch(appActions.setDaySummary(data)),
     setPaymentsDaySummary  : data => dispatch(appActions.setPaymentsDaySummary(data)),
     setDiscountsDaySummary  : data => dispatch(appActions.setDiscountsDaySummary(data)),
+
+    setHoursSummary  : data => dispatch(appActions.setHoursData(data)),
 
   }
 };

@@ -25,7 +25,7 @@ export const utils = {
   },
 
 
-  // metodo para exportar los datos estadisticos de las graficas...
+  // metodo para exportar los datos...
   exportData(data) {
     try{
       // const data1 = [{Sucursal:1,Ventas:10},{Sucursal:2,Ventas:20}];
@@ -80,6 +80,12 @@ export const api =
   getHoursSummary(jsonDates, apiKey) {
     const fullPath = endPoint + 'citas/TotalesItemsVendidosHoras/fini/' + jsonDates.startingDate + '/ffin/' + jsonDates.endingDate
     const response = fetch( fullPath, { headers: { 'APIKEY': testApiKey } }) //.then((data)=>{return data}).catch((error)=>{return error})
+    return response
+  },
+
+  getDiscounts(jsonDates, apiKey) {
+    const fullPath = endPoint + 'citas/Descuentos/fini/' + jsonDates.startingDate + '/ffin/' + jsonDates.endingDate
+    const response = fetch( fullPath, { headers: { 'APIKEY': testApiKey } })
     return response
   },
 

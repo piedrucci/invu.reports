@@ -10,11 +10,11 @@ class DaySummaryReport extends Component{
     const { daySummaryData, paymentsDaySummary, discountsDaySummary } = AppInfo
 
     let payments = null
-    let totalPayments = 0
+    // let totalPayments = 0
     if ( paymentsDaySummary.length > 0 ){
 
       payments = paymentsDaySummary.map( (pay, index) => {
-        totalPayments = (pay.tipoPago.toLowerCase() !== 'efectivo') ? (totalPayments+pay.total) : (totalPayments+0)
+        // totalPayments = (pay.tipoPago.toLowerCase() !== 'efectivo') ? (totalPayments+pay.total) : (totalPayments+0)
         return (<tr key={index}>
           <td>{pay.metodoPago}</td>
           <td>{pay.tipoPago}</td>
@@ -25,7 +25,44 @@ class DaySummaryReport extends Component{
 
     }
 
-    const discounts = discountsDaySummary || {idcat:'', ordenes:0, items:0}
+    const discounts = discountsDaySummary || null
+
+    let orderDiscounts = null
+    if ( typeof discounts.ordenes !== 'undefined' ) {
+
+      orderDiscounts = discounts.ordenes.map( (disc, index) => {
+        return (<tr key={index}>
+          <td>{disc.descuento} (Order)</td>
+          <td>{disc.cantidad}</td>
+          <td className="text-right">{disc.total}</td>
+        </tr>)
+      } )
+
+      orderDiscounts.push(<tr key={98}>
+        <td className="text-right" colSpan="2">Total Orders</td>
+        <td className="text-right">{discounts.total.ordenes}</td>
+      </tr>)
+
+    }
+
+    let itemDiscounts = null
+    if ( typeof discounts.items !== 'undefined' ) {
+
+      itemDiscounts = discounts.items.map( (disc, index) => {
+        return (<tr key={index}>
+          <td>{disc.descuento} (Item)</td>
+          <td>{disc.cantidad}</td>
+          <td className="text-right">{disc.total}</td>
+        </tr>)
+      } )
+
+      itemDiscounts.push(<tr key={99}>
+        <td className="text-right" colSpan="2">Total Items</td>
+        <td className="text-right">{discounts.total.items}</td>
+      </tr>)
+
+    }
+
 
     return (
       <div>
@@ -54,13 +91,13 @@ class DaySummaryReport extends Component{
                       <th scope="col">Amount</th>
                     </tr>
                   </thead>
-                  <tfoot>
+                  {/* <tfoot>
                     <tr>
                       <td>&nbsp;</td>
                       <td>Total</td>
                       <td>{totalPayments}</td>
                     </tr>
-                  </tfoot>
+                  </tfoot> */}
                   <tbody>
                     {payments}
                   </tbody>
@@ -72,17 +109,16 @@ class DaySummaryReport extends Component{
               <div className="col-sm-4">
                 <table className="table table-striped">
                   <thead className="thead-light">
-                    <tr><th colSpan="2">Discounts</th></tr>
+                    <tr><th colSpan="3">Discounts</th></tr>
                     <tr>
-                      <th scope="col">Orders</th>
-                      <th scope="col">Items</th>
+                      <th scope="col">Description</th>
+                      <th scope="col">Cant</th>
+                      <th scope="col">Amount</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr >
-                      <td className="text-right">{discounts.ordenes}</td>
-                      <td className="text-right">{discounts.items}</td>
-                    </tr>
+                    {orderDiscounts}
+                    {itemDiscounts}
                   </tbody>
                 </table>
               </div>

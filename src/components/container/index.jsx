@@ -8,6 +8,7 @@ import { Switch, Route,
 
 import SalesReport from '../reports/sales'
 import DaySummaryReport from '../reports/daySummary'
+import HoursReport from '../reports/hours'
 // import PaymentStats from '../statistic/daySummary'
 
 // The Main component renders one of the three provided
@@ -22,6 +23,7 @@ const Container = () => (
       {/* <Route path='/dashboard' component={ChartContainer}/> */}
       <Route path='/sales'     component={SalesReport}/>
       <Route path='/daysumary' component={DaySummaryReport}/>
+      <Route path='/hours' component={HoursReport}/>
       {/* <Redirect from="/" to="/sales"/> */}
     </Switch>
   </main>

@@ -52,8 +52,9 @@ export const columns = {
 
   hoursSummary: (data) => {
      return [
-      {Header:'Category', accessor:'category', width: 200},
-      {Header:'Item', accessor:'item', width: 300},
+      // {Header:'Category', accessor:'category', width: 200},
+      // {Header:'Item', accessor:'item', width: 300},
+      {Header:'Hour', accessor:'hour'},
 
       {Header:'Quantity',accessor:'quantityItems', Footer: (
           <FooterCell dataSet={data} options={{isInt:true,groupKey:'quantityItems'}}/>

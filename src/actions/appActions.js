@@ -48,7 +48,7 @@ export const setDiscountsDaySummary = (payload) => {
 
 export const setHoursData = (payload) => {
    return {
-      type: SET_DISCOUNTS_DAY_SUMMARY,
+      type: SET_HOURS_DATA,
       payload
    }
 }
