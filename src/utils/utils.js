@@ -77,6 +77,12 @@ export const api =
     return response
   },
 
+  getHoursSummary(jsonDates, apiKey) {
+    const fullPath = endPoint + 'citas/TotalesItemsVendidosHoras/fini/' + jsonDates.startingDate + '/ffin/' + jsonDates.endingDate
+    const response = fetch( fullPath, { headers: { 'APIKEY': testApiKey } }) //.then((data)=>{return data}).catch((error)=>{return error})
+    return response
+  },
+
   setEndPoint(uri) {
     endPoint = uri
   },

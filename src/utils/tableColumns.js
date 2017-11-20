@@ -47,5 +47,32 @@ export const columns = {
          <FooterCell dataSet={data} options={{isInt:false,groupKey:'price'}}/>
       )},
     ]
+},
+
+
+  hoursSummary: (data) => {
+     return [
+      {Header:'Category', accessor:'category', width: 200},
+      {Header:'Item', accessor:'item', width: 300},
+
+      {Header:'Quantity',accessor:'quantityItems', Footer: (
+          <FooterCell dataSet={data} options={{isInt:true,groupKey:'quantityItems'}}/>
+      )},
+      {Header:'Order Count',accessor:'quantityOrders', Footer: (
+          <FooterCell dataSet={data} options={{isInt:true,groupKey:'quantityOrders'}}/>
+      )},
+      {Header:'Gross', accessor:'gross', Footer: (
+          <FooterCell dataSet={data} options={{isInt:false,groupKey:'gross'}}/>
+      )},
+      {Header:'Discount', accessor:'discount', Footer: (
+          <FooterCell dataSet={data} options={{isInt:false,groupKey:'discount'}}/>
+      )},
+      {Header:'Net',accessor:'net', Footer: (
+          <FooterCell dataSet={data} options={{isInt:false,groupKey:'net'}}/>
+      )},
+      {Header:'Order Tax',accessor:'orderTax', Footer: (
+          <FooterCell dataSet={data} options={{isInt:false,groupKey:'orderTax'}}/>
+      )},
+    ]
   }
 }

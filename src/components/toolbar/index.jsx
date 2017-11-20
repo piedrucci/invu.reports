@@ -95,6 +95,9 @@ class ToolBar extends Component{
       case 2:
         await this.loadDaySummary(dates)
         break
+      case 3:
+        await this.loadDaySummary(dates)
+        break
       default:
         break
     }
@@ -115,6 +118,22 @@ class ToolBar extends Component{
   loadSales = async(dates) => {
     try{
       const response = await api.getItemsSummary( dates, "" )
+      const jsonData = await response.json()
+
+      if ( jsonData.encontro===true ){
+        await this.setState({tempData:jsonData.data})
+        this.groupData()
+      }else{
+        alert(jsonData.error)
+      }
+    } catch (err) {
+      alert(err)
+    }
+  }
+
+  loadHours = async(dates) => {
+    try{
+      const response = await api.getHoursSummary( dates, "" )
       const jsonData = await response.json()
 
       if ( jsonData.encontro===true ){

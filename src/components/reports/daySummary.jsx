@@ -47,7 +47,7 @@ class DaySummaryReport extends Component{
               <div className="col-sm-4">
                 <table className="table table-striped">
                   <thead className="thead-dark">
-                    <th colSpan="3">Payments</th>
+                     <tr><th colSpan="3">Payments</th></tr>
                     <tr>
                       <th scope="col">Payment</th>
                       <th scope="col">Type</th>
@@ -72,7 +72,7 @@ class DaySummaryReport extends Component{
               <div className="col-sm-4">
                 <table className="table table-striped">
                   <thead className="thead-light">
-                    <th colSpan="2">Discounts</th>
+                    <tr><th colSpan="2">Discounts</th></tr>
                     <tr>
                       <th scope="col">Orders</th>
                       <th scope="col">Items</th>

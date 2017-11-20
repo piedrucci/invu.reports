@@ -6,6 +6,8 @@ export const SET_DAY_SUMMARY = 'set_day_summary'
 export const SET_PAYMENTS_DAY_SUMMARY = 'toggle_fetch_data'
 export const SET_DISCOUNTS_DAY_SUMMARY = 'set_discounts_daysummary'
 
+export const SET_HOURS_DATA = 'set_hours_data'
+
 export const TOGGLE_FETCH_DATA = 'toggle_fetch_data'
 
 
@@ -38,6 +40,13 @@ export const setPaymentsDaySummary = (payload) => {
 }
 
 export const setDiscountsDaySummary = (payload) => {
+   return {
+      type: SET_DISCOUNTS_DAY_SUMMARY,
+      payload
+   }
+}
+
+export const setHoursData = (payload) => {
    return {
       type: SET_DISCOUNTS_DAY_SUMMARY,
       payload

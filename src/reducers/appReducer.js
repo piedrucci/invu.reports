@@ -6,7 +6,9 @@ const initialState = {
 
     daySummaryData: [],
     paymentsDaySummary: [],
-    discountsDaySummary: []
+    discountsDaySummary: [],
+    HoursSummary: [],
+
  }
 
 
@@ -27,6 +29,9 @@ const initialState = {
 
       case appActions.SET_DISCOUNTS_DAY_SUMMARY:
          return {...state, discountsDaySummary: action.payload}
+
+      case appActions.SET_HOURS_DATA:
+         return {...state, HoursSummary: action.payload}
 
     //    case SET_SESSION:
     //       // console.log(action.s)
