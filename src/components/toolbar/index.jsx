@@ -25,6 +25,7 @@ class ToolBar extends Component{
 
       tempData: null,
       salesGrouping: 'item',
+      hoursGrouping: 'item',
       grouping: 'item',
       epochDates: null
     }
@@ -36,6 +37,7 @@ class ToolBar extends Component{
     this.loadResults = this.loadResults.bind(this)
 
     this.changeGroup = this.changeGroup.bind(this)
+    this.changeHoursGroup = this.changeHoursGroup.bind(this)
     this.groupData = this.groupData.bind(this)
   }
 
@@ -156,6 +158,7 @@ class ToolBar extends Component{
 
   loadDaySummary = async() => {
     try{
+      await this.setState({grouping:'item'})
       const response = await api.getDaySummary( this.state.epochDates, "" )
       const jsonData = await response.json()
 
@@ -178,6 +181,12 @@ class ToolBar extends Component{
     this.groupData()
   }
 
+  changeHoursGroup = async(event) => {
+    const groupName = event.target.value
+    await this.setState({hoursGrouping: groupName, grouping: groupName})
+    this.groupData()
+  }
+
   groupData = async() => {
     let groupName = 'nombre'
 
@@ -194,7 +203,7 @@ class ToolBar extends Component{
     if (this.props.AppInfo.activeModule === 1) {await this.props.setSalesSummary( ProcessSales(groupName, this.state.tempData) )}
 
     if (this.props.AppInfo.activeModule === 2) {
-      await this.props.setDaySummary( ProcessDaySummary(groupName, this.state.tempData) )
+      await this.props.setDaySummary( ProcessSales(groupName, this.state.tempData) )
 
       // obtener los metodos de pago (payments)
       const paymentsInfoRequest = await api.getPayments(this.state.epochDates, "")
@@ -210,7 +219,7 @@ class ToolBar extends Component{
    }
 
    if (this.props.AppInfo.activeModule === 3) {
-     await this.props.setHoursSummary( ProcessHours(groupName, this.state.tempData) )
+     await this.props.setHoursSummary( ProcessSales(groupName, this.state.tempData) )
    }
 
   }
@@ -273,7 +282,16 @@ class ToolBar extends Component{
                 activeModule === 1 ?
                 <select value={this.state.salesGrouping} onChange={this.changeGroup} className="form-control" >
                   <option value="item">No Grouping</option>
-                  <option value="category">Categoy</option>
+                  <option value="category">Category</option>
+                </select>
+                : null
+              }
+
+              {
+                activeModule === 3 ?
+                <select value={this.state.hoursGrouping} onChange={this.changeHoursGroup} className="form-control" >
+                  <option value="item">No Grouping</option>
+                  <option value="hora">Hours</option>
                 </select>
                 : null
               }

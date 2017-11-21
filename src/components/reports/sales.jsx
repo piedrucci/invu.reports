@@ -18,7 +18,7 @@ class SalesReport extends Component{
             <TableData
               dataSet={salesSummaryData}
               headers={columns.sales(salesSummaryData)}
-              pageSize={20}
+              pageSize={10}
             />
 
             <br />

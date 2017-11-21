@@ -10,15 +10,18 @@ export const ProcessSales = (groupName, data) => {
     let rowInfo = row[0]
 
     let itemInfo = {
-      item: (groupName==='') ,
+      item: (groupName==='nombre') ? rowInfo.item.nombre : '' ,
       category:rowInfo.item.nombrecat,
       quantityItems: 0,
       quantityOrders: 0,
       gross: 0,
       discount: 0,
       net: 0,
-      orderTax: 0
+      orderTax: 0,
+      hour: rowInfo.item.hora
     }
+
+    if ( itemInfo.item==='' ) {delete itemInfo.item}
 
     row.map( (item, index) => {
 
@@ -130,25 +133,55 @@ export const ProcessHours = (groupName, data) => {
 
 
 export const ProcessDaySummary = (groupName, data) => {
-  let arrData =  data.map( (item, index) => {
-    // calcular el total en modificadores para el item actual
-    let totalMods =  item.item.modif.reduce( (total, mod) => {
-      // console.log(`tiene modificador... `)
-      // console.log(mod)
-      return parseFloat(total) + parseFloat(mod.total)
-    },0.0 ) || 0
+  // agrupar por el campo seleccionado (groupName)
+  let grouped = _.groupBy(data, (row)=> {
+    return row.item[groupName]
+  })
 
-    totalMods = ( totalMods!==0 ) ? parseFloat(item.item.total_vendido)+parseFloat(totalMods) : parseFloat(item.item.total_vendido)
-
-    const rowInfo = {
-      item:item.item.nombre,
-      quantityItems:parseInt(item.item.cantidad_ordenes, 10),
-      discount: parseFloat(item.item.descuento),
-      price: parseFloat((totalMods).toFixed(2))
+  let row = null
+  // let arrData =  data.map( (item, index) => {
+  let arrData =  _.map( grouped, (item) => {
+    let rowInfo = {
+      item: '',
+      quantityItems:0,
+      discount: 0,
+      price: 0
     }
 
+    item.map( (elem, index) => {
+      const modifiers = elem.item.modif
+
+      // calcular el total en modificadores para el item actual
+      let totalMods = 0
+      if (modifiers.length>0){
+        console.log(elem.item.modif);
+        // let ss = 1
+        totalMods = elem.item.modif.reduce( (total, mod) => {
+          // console.log(`vuelta #${ss}, total:${total}`);
+          // ss += 1
+          const totalMod = ( mod.hora === elem.item.hora ) ? parseFloat(total) + parseFloat(mod.total) : 0
+          return totalMod
+        },0.0 )
+      }
+
+      // if ( totalMods !==0 ) {
+      //   console.log(totalMods)
+      // }
+      // const finalPrice = ( totalMods!==0 ) ? parseFloat(elem.item.total_vendido)+parseFloat(totalMods) : parseFloat(elem.item.total_vendido)
+      const grossRow =  parseFloat(elem.item.total_vendido) + totalMods
+      rowInfo.price =  parseFloat( ( parseFloat(rowInfo.price) + grossRow) )
+
+      rowInfo.quantityItems += parseInt(elem.item.cantidad_ordenes, 10)
+      rowInfo.discount += parseFloat(elem.item.descuento)
+      // rowInfo.price += parseFloat(finalPrice)
+
+    } )
+
+
     return rowInfo
+
   } )
 
   return arrData
+
 }

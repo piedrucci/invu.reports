@@ -43,6 +43,22 @@ export const utils = {
       console.log(err)
     }
   },
+
+
+// obtiene los parametros desde SESSION-STORAGE para hacer las peticiones a la API
+  getSessionParams() {
+    const params = sessionStorage.getItem('reportsConfig')
+    return JSON.parse(params)
+  },
+
+  initializeParams() {
+    sessionStorage.setItem('reportsConfig', JSON.stringify({
+        APIKEY : testApiKey,
+        API    : 'https://api.invupos.com/invuApiPos/index.php?r=',
+        NOMBREF: 'Little Caesars'
+      })
+    )
+  },
 }
 
 
@@ -59,8 +75,8 @@ export const api =
 
   getDaySummary(fechas, apiKey) {
     // const response = fetch( endPoint + 'citas/ItemsVendidosFechas/fini/' + fechas.startingDate + '/ffin/' + fechas.endingDate,
-    // const response = fetch( endPoint + 'citas/TotalesItemsVendidosHoras/fini/' + fechas.startingDate + '/ffin/' + fechas.endingDate,
-    const response = fetch( endPoint + 'citas/TotalesItemsVendidosFechas/fini/' + fechas.startingDate + '/ffin/' + fechas.endingDate,
+    const response = fetch( endPoint + 'citas/TotalesItemsVendidosHoras/fini/' + fechas.startingDate + '/ffin/' + fechas.endingDate,
+    // const response = fetch( endPoint + 'citas/TotalesItemsVendidosFechas/fini/' + fechas.startingDate + '/ffin/' + fechas.endingDate,
     { headers: { 'APIKEY': testApiKey } })
     return response
   },

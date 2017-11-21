@@ -73,7 +73,7 @@ class DaySummaryReport extends Component{
             <div className="row">
               <div className="col-sm-12">
                 <br />
-                <TableData dataSet={daySummaryData} headers={columns.daySummary(daySummaryData)} />
+                <TableData dataSet={daySummaryData} headers={columns.daySummary(daySummaryData)} pageSize={10} />
               </div>
             </div>
 

@@ -13,6 +13,7 @@ class TableData extends Component {
             pageSizeOptions={[5, 10, 20, 25, 50, 100]}
             defaultPageSize={this.props.pageSize}
             className="-striped -highlight"
+            noDataText="Empty dataSet!"
          />
       )
    }

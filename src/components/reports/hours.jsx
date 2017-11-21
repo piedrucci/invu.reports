@@ -18,7 +18,7 @@ class HoursReport extends Component{
             <div className="row">
               <div className="col-sm-12">
                 <br />
-                <TableData dataSet={hoursSummary} headers={columns.hoursSummary(hoursSummary)} pageSize={20} />
+                <TableData dataSet={hoursSummary} headers={columns.hoursSummary(hoursSummary)} pageSize={10} />
               </div>
             </div>
 

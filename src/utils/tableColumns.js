@@ -43,8 +43,8 @@ export const columns = {
       {Header:'Discount',accessor:'discount', Footer: (
          <FooterCell dataSet={data} options={{isInt:false,groupKey:'discount'}}/>
       )},
-      {Header:'Amount',accessor:'price', Footer: (
-         <FooterCell dataSet={data} options={{isInt:false,groupKey:'price'}}/>
+      {Header:'Amount',accessor:'gross', Footer: (
+         <FooterCell dataSet={data} options={{isInt:false,groupKey:'gross'}}/>
       )},
     ]
 },
@@ -52,8 +52,8 @@ export const columns = {
 
   hoursSummary: (data) => {
      return [
-      // {Header:'Category', accessor:'category', width: 200},
-      // {Header:'Item', accessor:'item', width: 300},
+      {Header:'Category', accessor:'category', width: 200},
+      {Header:'Item', accessor:'item', width: 300},
       {Header:'Hour', accessor:'hour'},
 
       {Header:'Quantity',accessor:'quantityItems', Footer: (
