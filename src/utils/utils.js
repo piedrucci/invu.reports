@@ -4,7 +4,12 @@ let dateFormat = "MM-DD-YYYY"
 let endPoint = "https://api.invupos.com/invuApiPos/index.php?r="
 
 // const testApiKey = "bd_yogenmultiplazapos"
-const testApiKey = "bd_lcaesarsvzaita"
+// const testApiKey = "bd_lcaesarsvzaita"
+let session = {
+    APIKEY : '',
+    API    : 'https://api.invupos.com/invuApiPos/index.php?r=',
+    NOMBREF: 'empty'
+  }
 
 export const utils = {
 
@@ -48,14 +53,19 @@ export const utils = {
 // obtiene los parametros desde SESSION-STORAGE para hacer las peticiones a la API
   getSessionParams() {
     const params = sessionStorage.getItem('reportsConfig')
-    return JSON.parse(params)
+    if (params === null){
+      return undefined
+   }else{
+      session = JSON.parse(params)
+      return session
+   }
   },
 
   initializeParams() {
     sessionStorage.setItem('reportsConfig', JSON.stringify({
-        APIKEY : testApiKey,
+        APIKEY : 'bd_lcaesarsvzaita',
         API    : 'https://api.invupos.com/invuApiPos/index.php?r=',
-        NOMBREF: 'Little Caesars'
+        NOMBREF: 'empty'
       })
     )
   },
@@ -69,7 +79,7 @@ export const api =
   getItemsSummary(jsonDates, apiKey) {
     // const fullPath = endPoint + 'citas/TotalesItemsVendidosFechas/fini/' + jsonDates.startingDate + '/ffin/' + jsonDates.endingDate
     const fullPath = endPoint + 'citas/TotalesItemsVendidosHoras/fini/' + jsonDates.startingDate + '/ffin/' + jsonDates.endingDate
-    const response = fetch( fullPath, { headers: { 'APIKEY': testApiKey } }) //.then((data)=>{return data}).catch((error)=>{return error})
+    const response = fetch( fullPath, { headers: { 'APIKEY': session.APIKEY } }) //.then((data)=>{return data}).catch((error)=>{return error})
     return response
   },
 
@@ -77,31 +87,31 @@ export const api =
     // const response = fetch( endPoint + 'citas/ItemsVendidosFechas/fini/' + fechas.startingDate + '/ffin/' + fechas.endingDate,
     const response = fetch( endPoint + 'citas/TotalesItemsVendidosHoras/fini/' + fechas.startingDate + '/ffin/' + fechas.endingDate,
     // const response = fetch( endPoint + 'citas/TotalesItemsVendidosFechas/fini/' + fechas.startingDate + '/ffin/' + fechas.endingDate,
-    { headers: { 'APIKEY': testApiKey } })
+    { headers: { 'APIKEY': session.APIKEY } })
     return response
   },
 
   getItems(jsonDates, apiKey) {
     const fullPath = endPoint + 'citas/ItemsVendidosFechas/fini/' + jsonDates.startingDate + '/ffin/' + jsonDates.endingDate
-    const response = fetch( fullPath, { headers: { 'APIKEY': testApiKey } })
+    const response = fetch( fullPath, { headers: { 'APIKEY': session.APIKEY } })
     return response
   },
 
   getPayments(jsonDates, apiKey) {
     const fullPath = endPoint + 'citas/TotalesPagosFechas/fini/' + jsonDates.startingDate + '/ffin/' + jsonDates.endingDate
-    const response = fetch( fullPath, { headers: { 'APIKEY': testApiKey } })
+    const response = fetch( fullPath, { headers: { 'APIKEY': session.APIKEY } })
     return response
   },
 
   getHoursSummary(jsonDates, apiKey) {
     const fullPath = endPoint + 'citas/TotalesItemsVendidosHoras/fini/' + jsonDates.startingDate + '/ffin/' + jsonDates.endingDate
-    const response = fetch( fullPath, { headers: { 'APIKEY': testApiKey } }) //.then((data)=>{return data}).catch((error)=>{return error})
+    const response = fetch( fullPath, { headers: { 'APIKEY': session.APIKEY } }) //.then((data)=>{return data}).catch((error)=>{return error})
     return response
   },
 
   getDiscounts(jsonDates, apiKey) {
     const fullPath = endPoint + 'citas/Descuentos/fini/' + jsonDates.startingDate + '/ffin/' + jsonDates.endingDate
-    const response = fetch( fullPath, { headers: { 'APIKEY': testApiKey } })
+    const response = fetch( fullPath, { headers: { 'APIKEY': session.APIKEY } })
     return response
   },
 

@@ -83,6 +83,12 @@ class ToolBar extends Component{
   }
 
   loadResults = async() => {
+     if (typeof utils.getSessionParams() === 'undefined' ) {
+         utils.initializeParams()
+         console.log(utils.getSessionParams())
+     }else{
+        console.log('params loaded...');
+     }
     this.toggleFetchData(true)
 
     const epochStartingDate = utils.getEpochDate(moment(this.state.startDate).format(utils.getDateFormat()))
