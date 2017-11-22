@@ -8,8 +8,9 @@ import { connect } from 'react-redux';
 import * as appActions from '../../actions/appActions'
 import {
   ProcessSales,
-  ProcessDaySummary,
-  ProcessHours } from './calculateData'
+  // ProcessDaySummary,
+  // ProcessHours
+} from './calculateData'
 
 class ToolBar extends Component{
   constructor(props){
@@ -87,7 +88,7 @@ class ToolBar extends Component{
          utils.initializeParams()
          console.log(utils.getSessionParams())
      }else{
-        console.log('params loaded...');
+        // console.log('params loaded successfully...');
      }
     this.toggleFetchData(true)
 
@@ -137,7 +138,7 @@ class ToolBar extends Component{
         await this.setState({tempData:jsonData.data})
         this.groupData()
       }else{
-        alert(jsonData.error)
+        if (jsonData.error){alert(jsonData.mensaje)}
       }
     } catch (err) {
       alert(err)
@@ -154,7 +155,7 @@ class ToolBar extends Component{
         await this.setState({tempData:jsonData.data})
         this.groupData()
       }else{
-        alert(jsonData.error)
+        if (jsonData.error){alert(jsonData.mensaje)}
       }
     } catch (err) {
       alert(err)
@@ -173,7 +174,7 @@ class ToolBar extends Component{
         await this.groupData()
 
       }else{
-         alert(jsonData.error)
+        if (jsonData.error){alert(jsonData.mensaje)}
       }
     } catch (err) {
       alert(err)

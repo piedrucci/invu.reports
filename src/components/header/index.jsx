@@ -65,12 +65,12 @@ class Header extends Component{
             <li className="nav-item">
               <Link className={`nav-link ${(this.state.opt===3) ? 'active' : ''}`} onClick={()=>this.setOptionMenu(3)} to='/hours' >Horas</Link>
             </li>
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <Link className={`nav-link ${(this.state.opt===4) ? 'active' : ''}`} onClick={()=>this.setOptionMenu(4)} to='/items' >Items</Link>
             </li>
             <li className="nav-item">
               <Link className={`nav-link ${(this.state.opt===5) ? 'active' : ''}`} onClick={()=>this.setOptionMenu(5)} to='/itemhours' >Item Horas</Link>
-            </li>
+            </li> */}
           </ul>
 
         </div>

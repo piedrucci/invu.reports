@@ -26,14 +26,22 @@ export const ProcessSales = (groupName, data) => {
     row.map( (item, index) => {
 
       let totalMods = 0
-      totalMods = item.item.modif.reduce( (total, mod) => {
-        const totalMod = ( mod.hora === rowInfo.item.hora ) ? parseFloat(total) + parseFloat(mod.total) : 0
-        return totalMod
-      },0.0 )
 
+      item.item.modif.forEach(function(mod, indice, array) {
+        totalMods+= ( mod.hora === item.item.hora ) ? parseFloat(mod.total) : 0
+      })
+      /*totalMods = item.item.modif.reduce( (total, mod) => {
+        if(mod.hora === item.item.hora){
+          //console.log(`${mod.hora} === ${item.item.hora}`);
+
+        }
+        const totalMod = ( mod.hora === item.item.hora ) ? parseFloat(total) + parseFloat(mod.total) : 0
+        return totalMod
+      },0.0 )*/
+      // console.log(totalMods);
+      
       itemInfo.quantityItems = parseInt(itemInfo.quantityItems, 10) + parseInt(item.item.cantidad_vendida, 10)
       itemInfo.quantityOrders = parseInt(itemInfo.quantityOrders, 10) + parseInt(item.item.cantidad_ordenes, 10)
-
       const grossRow =  parseFloat(item.item.total_vendido) + totalMods
       itemInfo.gross =  parseFloat( ( parseFloat(itemInfo.gross) + grossRow).toFixed(2) )
 
@@ -43,6 +51,8 @@ export const ProcessSales = (groupName, data) => {
       const itemNet = ( parseFloat(itemInfo.net) + ( grossRow - parseFloat(item.item.descuento)) ).toFixed(2)
       itemInfo.net = parseFloat( itemNet )
       itemInfo.orderTax = parseFloat(itemInfo.orderTax) + parseFloat( (item.item.tax).toFixed(2) )
+
+      return null
 
     } )
 
@@ -120,6 +130,8 @@ export const ProcessHours = (groupName, data) => {
 
         }
 
+        return null
+
       } )
     }
 
@@ -138,7 +150,6 @@ export const ProcessDaySummary = (groupName, data) => {
     return row.item[groupName]
   })
 
-  let row = null
   // let arrData =  data.map( (item, index) => {
   let arrData =  _.map( grouped, (item) => {
     let rowInfo = {
@@ -174,6 +185,8 @@ export const ProcessDaySummary = (groupName, data) => {
       rowInfo.quantityItems += parseInt(elem.item.cantidad_ordenes, 10)
       rowInfo.discount += parseFloat(elem.item.descuento)
       // rowInfo.price += parseFloat(finalPrice)
+
+      return null
 
     } )
 
