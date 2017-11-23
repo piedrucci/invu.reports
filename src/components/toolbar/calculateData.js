@@ -21,7 +21,9 @@ export const ProcessSales = (groupName, data) => {
       hour: rowInfo.item.hora
     }
 
-    if ( itemInfo.item==='' ) {delete itemInfo.item}
+    if (groupName==='nombrecat') delete itemInfo.item
+    if (groupName==='hora') delete itemInfo.category
+    // if ( itemInfo.item==='' ) {delete itemInfo.item}
 
     row.map( (item, index) => {
 
@@ -39,7 +41,7 @@ export const ProcessSales = (groupName, data) => {
         return totalMod
       },0.0 )*/
       // console.log(totalMods);
-      
+
       itemInfo.quantityItems = parseInt(itemInfo.quantityItems, 10) + parseInt(item.item.cantidad_vendida, 10)
       itemInfo.quantityOrders = parseInt(itemInfo.quantityOrders, 10) + parseInt(item.item.cantidad_ordenes, 10)
       const grossRow =  parseFloat(item.item.total_vendido) + totalMods

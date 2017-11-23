@@ -1,6 +1,6 @@
 import 'react-dates/initialize'
 import React, { Component } from 'react'
-import { SingleDatePicker, DateRangePicker } from 'react-dates'
+import { SingleDatePicker, DateRangePicker, isInclusivelyBeforeDay } from 'react-dates'
 import 'react-dates/lib/css/_datepicker.css'
 import moment from 'moment'
 import {utils, api} from '../../utils/utils'
@@ -242,13 +242,21 @@ class ToolBar extends Component{
 
 
   render( { AppInfo } = this.props ){
-    const { activeModule } = AppInfo
+    const { activeModule, salesSummaryData, daySummaryData,
+      hoursSummary } = AppInfo
+
+    let dataSet = []
+    if ( activeModule === 1 ) dataSet = salesSummaryData
+    if ( activeModule === 2 ) dataSet = daySummaryData
+    if ( activeModule === 3 ) dataSet = hoursSummary
+
+
     return (
       <div className="container-fluid">
         <br />
         <div className='row'>
 
-          <div className="col-sm-12">
+          <div className="col-sm-11">
 
             <form className="form-inline">
 
@@ -266,7 +274,8 @@ class ToolBar extends Component{
                   onFocusChange={this.onFocusChange}
                   displayFormat={utils.getDateFormat()}
                   // isOutsideRange={date => date.year() !== moment()}
-                  isOutsideRange={() => false}
+                  // isOutsideRange={() => false}.
+                  isOutsideRange={day => !isInclusivelyBeforeDay(day, moment())}
                 />
                 :
                 <DateRangePicker
@@ -276,8 +285,7 @@ class ToolBar extends Component{
                   onFocusChange={this.onFocusChange}
                   focusedInput={this.state.focusedInput}
                   displayFormat={utils.getDateFormat()}
-                  isOutsideRange={() => false}
-                  // isOutsideRange={date => date.year() !== moment()}
+                  isOutsideRange={day => !isInclusivelyBeforeDay(day, moment())}
                 />
               }
 
@@ -316,7 +324,9 @@ class ToolBar extends Component{
                 // </select>
                 <div className="btn-group">
                   <button type="button" className="btn btn-secondary">Group By</button>
-                  <button type="button" className="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <button type="button" className="btn btn-secondary dropdown-toggle dropdown-toggle-split"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    disabled={this.state.disabledButtonSearch}>
                     <span className="sr-only">Toggle Dropdown</span>
                   </button>
                   <div className="dropdown-menu">
@@ -328,11 +338,24 @@ class ToolBar extends Component{
                 : null
               }
 
-
-
             </form>
 
           </div>
+
+          {dataSet.length>0?
+          <div className="col-sm-1">
+            <div className="btn-group">
+              <button type="button" className="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Export
+              </button>
+              <div className="dropdown-menu">
+                <a className="dropdown-item" role="button" onClick={()=>utils.exportData(dataSet)}><i className="fa fa-file-excel-o" aria-hidden="true"></i> Excel (.xlsx)</a>
+                {/* <div className="dropdown-divider"></div>
+                <a className="dropdown-item" role="button">Separated link</a> */}
+              </div>
+            </div>
+          </div>
+          : null}
 
         </div>
 

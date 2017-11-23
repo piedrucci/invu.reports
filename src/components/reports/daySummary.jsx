@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import TableData from '../tableData'
 import { connect } from 'react-redux';
 import {columns} from '../../utils/tableColumns'
-import { utils } from '../../utils/utils'
 
 class DaySummaryReport extends Component{
 
@@ -14,13 +13,11 @@ class DaySummaryReport extends Component{
     if ( paymentsDaySummary.length > 0 ){
 
       payments = paymentsDaySummary.map( (pay, index) => {
-        // totalPayments = (pay.tipoPago.toLowerCase() !== 'efectivo') ? (totalPayments+pay.total) : (totalPayments+0)
         return (<tr key={index}>
           <td>{pay.metodoPago}</td>
           <td>{pay.tipoPago}</td>
           <td className="text-right">{pay.total}</td>
           </tr>)
-         //   console.log(pay)
       } )
 
     }
@@ -62,7 +59,6 @@ class DaySummaryReport extends Component{
       </tr>)
 
     }
-
 
     return (
       <div>
@@ -121,19 +117,6 @@ class DaySummaryReport extends Component{
                     {itemDiscounts}
                   </tbody>
                 </table>
-              </div>
-            </div>
-
-
-
-            <div className="row">
-              <div className="col-sm-12 text-center">
-                <br />
-                <button
-                  className="btn btn-success"
-                  onClick={()=>utils.exportData(daySummaryData)}>
-                  <i className="fa fa-file-excel-o fa-2x" aria-hidden="true"></i>
-                </button>
               </div>
             </div>
 
