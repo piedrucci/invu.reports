@@ -51,7 +51,7 @@ export const utils = {
 
 // obtiene los parametros desde SESSION-STORAGE para hacer las peticiones a la API
   getSessionParams() {
-    const params = sessionStorage.getItem('reportsConfig')
+    const params = sessionStorage.getItem('json')
     if (params === null){
       return undefined
    }else{
@@ -65,7 +65,7 @@ export const utils = {
     session.API    = 'https://api.invupos.com/invuApiPos/index.php?r='
     session.NOMBREF= 'Little Caesars'
 
-    sessionStorage.setItem('reportsConfig', JSON.stringify(session)
+    sessionStorage.setItem('json', JSON.stringify(session)
     )
   },
 }

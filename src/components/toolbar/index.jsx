@@ -38,7 +38,7 @@ class ToolBar extends Component{
     this.loadResults = this.loadResults.bind(this)
 
     this.changeGroup = this.changeGroup.bind(this)
-    this.changeHoursGroup = this.changeHoursGroup.bind(this)
+    // this.changeHoursGroup = this.changeHoursGroup.bind(this)
     this.groupData = this.groupData.bind(this)
   }
 
@@ -86,7 +86,7 @@ class ToolBar extends Component{
   loadResults = async() => {
      if (typeof utils.getSessionParams() === 'undefined' ) {
          utils.initializeParams()
-         console.log(utils.getSessionParams())
+         // console.log(utils.getSessionParams())
      }else{
         // console.log('params loaded successfully...');
      }
@@ -182,17 +182,26 @@ class ToolBar extends Component{
   }
 
 
-  changeGroup = async(event) => {
-    const groupName = event.target.value
-    await this.setState({salesGrouping: groupName, grouping: groupName})
+  // changeGroup = async(event) => {
+  //   const groupName = event.target.value
+  //   await this.setState({salesGrouping: groupName, grouping: groupName})
+  //   this.groupData()
+  // }
+
+  changeGroup = async(strFilter) => {
+    if (this.props.AppInfo.activeModule === 1)
+      await this.setState({salesGrouping: strFilter, grouping: strFilter})
+    if (this.props.AppInfo.activeModule === 3)
+      await this.setState({hoursGrouping: strFilter, grouping: strFilter})
+
     this.groupData()
   }
 
-  changeHoursGroup = async(event) => {
-    const groupName = event.target.value
-    await this.setState({hoursGrouping: groupName, grouping: groupName})
-    this.groupData()
-  }
+  // changeHoursGroup = async(event) => {
+  //   const groupName = event.target.value
+  //   await this.setState({hoursGrouping: groupName, grouping: groupName})
+  //   this.groupData()
+  // }
 
   groupData = async() => {
     let groupName = 'nombre'
@@ -243,13 +252,9 @@ class ToolBar extends Component{
 
             <form className="form-inline">
 
-              {
-                activeModule === 1 ?
-                <label className="form-check-label">
-                  <input className="form-check-input" type="checkbox" checked={this.state.activeRange} onChange={this.handleCheck}/> Range
-                </label>
-                :null
-              }
+              <label className="form-check-label">
+                <input className="form-check-input" type="checkbox" checked={this.state.activeRange} onChange={this.handleCheck}/> Range
+              </label>
 
               {
                 this.state.activeRange === false ?
@@ -287,21 +292,43 @@ class ToolBar extends Component{
 
               {
                 activeModule === 1 ?
-                <select value={this.state.salesGrouping} onChange={this.changeGroup} className="form-control" >
-                  <option value="item">No Grouping</option>
-                  <option value="category">Category</option>
-                </select>
+                <div className="btn-group">
+                  <button type="button" className="btn btn-secondary">Group By</button>
+                  <button type="button" className="btn btn-secondary dropdown-toggle dropdown-toggle-split"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    disabled={this.state.disabledButtonSearch}>
+                    <span className="sr-only">Toggle Dropdown</span>
+                  </button>
+                  <div className="dropdown-menu">
+                    <a className="dropdown-item" role="button" onClick={()=>this.changeGroup('item')}>{this.state.salesGrouping==='item'?<i className="fa fa-arrow-right" aria-hidden="true"></i>:null} No Grouping</a>
+                    <div className="dropdown-divider"></div>
+                    <a className="dropdown-item" role="button" onClick={()=>this.changeGroup('category')}>{this.state.salesGrouping==='category'?<i className="fa fa-arrow-right" aria-hidden="true"></i>:null}  Category</a>
+                  </div>
+                </div>
                 : null
               }
 
               {
                 activeModule === 3 ?
-                <select value={this.state.hoursGrouping} onChange={this.changeHoursGroup} className="form-control" >
-                  <option value="item">No Grouping</option>
-                  <option value="hora">Hours</option>
-                </select>
+                // <select value={this.state.hoursGrouping} onChange={this.changeHoursGroup} className="form-control" >
+                //   <option value="item">No Grouping</option>
+                //   <option value="hora">Hours</option>
+                // </select>
+                <div className="btn-group">
+                  <button type="button" className="btn btn-secondary">Group By</button>
+                  <button type="button" className="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span className="sr-only">Toggle Dropdown</span>
+                  </button>
+                  <div className="dropdown-menu">
+                    <a className="dropdown-item" role="button" onClick={()=>this.changeGroup('item')}>{this.state.hoursGrouping==='item'?<i className="fa fa-arrow-right" aria-hidden="true"></i>:null} No Grouping</a>
+                    <div className="dropdown-divider"></div>
+                    <a className="dropdown-item" role="button" onClick={()=>this.changeGroup('hora')}>{this.state.hoursGrouping==='hora'?<i className="fa fa-arrow-right" aria-hidden="true"></i>:null}  Hour</a>
+                  </div>
+                </div>
                 : null
               }
+
+
 
             </form>
 
