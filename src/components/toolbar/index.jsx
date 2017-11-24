@@ -6,11 +6,7 @@ import moment from 'moment'
 import {utils, api} from '../../utils/utils'
 import { connect } from 'react-redux';
 import * as appActions from '../../actions/appActions'
-import {
-  ProcessSales,
-  // ProcessDaySummary,
-  // ProcessHours
-} from './calculateData'
+import { ProcessSales } from './calculateData'
 
 class ToolBar extends Component{
   constructor(props){
@@ -188,12 +184,6 @@ class ToolBar extends Component{
   }
 
 
-  // changeGroup = async(event) => {
-  //   const groupName = event.target.value
-  //   await this.setState({salesGrouping: groupName, grouping: groupName})
-  //   this.groupData()
-  // }
-
   changeGroup = async(strFilter) => {
     if (this.props.AppInfo.activeModule === 1)
       await this.setState({salesGrouping: strFilter, grouping: strFilter})
@@ -202,12 +192,6 @@ class ToolBar extends Component{
 
     this.groupData()
   }
-
-  // changeHoursGroup = async(event) => {
-  //   const groupName = event.target.value
-  //   await this.setState({hoursGrouping: groupName, grouping: groupName})
-  //   this.groupData()
-  // }
 
   groupData = async() => {
     let groupName = 'nombre'
@@ -296,8 +280,6 @@ class ToolBar extends Component{
                   onDateChange={this.onDateChange}
                   onFocusChange={this.onFocusChange}
                   displayFormat={utils.getDateFormat()}
-                  // isOutsideRange={date => date.year() !== moment()}
-                  // isOutsideRange={() => false}.
                   isOutsideRange={day => !isInclusivelyBeforeDay(day, moment())}
                 />
                 :

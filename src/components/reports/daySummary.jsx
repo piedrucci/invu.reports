@@ -9,16 +9,34 @@ class DaySummaryReport extends Component{
     const { daySummaryData, paymentsDaySummary, discountsDaySummary } = AppInfo
 
     let payments = null
-    // let totalPayments = 0
-    if ( paymentsDaySummary.length > 0 ){
+    let grandNet = 0
+    let totalOtherPays = 0
 
+    if (daySummaryData.length>0){
+      grandNet = daySummaryData.reduce( (total, row) => {
+          return row.net + total
+        },0.0 )
+    }
+
+    if ( paymentsDaySummary.length > 0 ){
+      // let totalCash = 0
       payments = paymentsDaySummary.map( (pay, index) => {
-        return (<tr key={index}>
+
+        let _pay = null
+        if ( pay.metodoPago.toLowerCase() !== 'efectivo' ){
+          totalOtherPays += pay.total
+          // totalCash -= pay.total
+          _pay = (
+          <tr key={index}>
           <td>{pay.metodoPago}</td>
           <td>{pay.tipoPago}</td>
           <td className="text-right">{pay.total}</td>
-          </tr>)
+          </tr>
+          )
+        }
+        return _pay
       } )
+
 
     }
 
@@ -96,6 +114,11 @@ class DaySummaryReport extends Component{
                   </tfoot> */}
                   <tbody>
                     {payments}
+                    <tr key={89}>
+                      <td>Efectivo</td>
+                      <td>Efectivo</td>
+                      <td className="text-right">{parseFloat( (grandNet - totalOtherPays).toFixed(2) )}</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
