@@ -5,8 +5,22 @@ import {columns} from '../../utils/tableColumns'
 
 class HoursReport extends Component{
 
+  componentDidUpdate
+
   render( { AppInfo } = this.props ) {
-    const { hoursSummary } = AppInfo
+    const { hoursSummary, hoursVisibleColumns } = AppInfo
+
+    let reportHeaders = columns.hoursSummary(hoursSummary)
+    
+    for ( var pos1 in reportHeaders ){
+      for ( var pos2 in hoursVisibleColumns ){
+        reportHeaders[pos1].show = false
+        if (reportHeaders[pos1].Header.toLowerCase() === hoursVisibleColumns[pos2].toLowerCase()){
+          reportHeaders[pos1].show = true
+          break
+        }
+      }
+    }
 
     return (
       <div>
@@ -17,7 +31,7 @@ class HoursReport extends Component{
             <div className="row">
               <div className="col-sm-12">
                 <br />
-                <TableData dataSet={hoursSummary} headers={columns.hoursSummary(hoursSummary)} pageSize={10} />
+                <TableData dataSet={hoursSummary} headers={reportHeaders} pageSize={10} />
               </div>
             </div>
 

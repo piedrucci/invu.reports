@@ -2,12 +2,23 @@ import React, { Component } from 'react'
 import TableData from '../tableData'
 import { connect } from 'react-redux'
 import {columns} from '../../utils/tableColumns'
-// import PDF from '../../utils/pdf'
-// import Modal from '../../utils/modal'
 
 class SalesReport extends Component{
   render( { AppInfo } = this.props ) {
-    const { salesSummaryData } = AppInfo
+    const { salesSummaryData, salesVisibleColumns } = AppInfo
+
+    let reportHeaders = columns.sales(salesSummaryData)
+    
+    for ( var pos1 in reportHeaders ){
+      for ( var pos2 in salesVisibleColumns ){
+        reportHeaders[pos1].show = false
+        if (reportHeaders[pos1].Header.toLowerCase() === salesVisibleColumns[pos2].toLowerCase()){
+          reportHeaders[pos1].show = true
+          break
+        }
+      }
+    }
+
     return (
       <div>
         {
@@ -16,7 +27,7 @@ class SalesReport extends Component{
             <br />
             <TableData
               dataSet={salesSummaryData}
-              headers={columns.sales(salesSummaryData)}
+              headers={reportHeaders}
               pageSize={10}
             />
           </div>

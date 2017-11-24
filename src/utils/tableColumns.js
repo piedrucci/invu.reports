@@ -13,19 +13,22 @@ export const columns = {
             // </span>
             <FooterCell dataSet={data} options={{isInt:true,groupKey:'quantityItems'}}/>
          )},
-         {Header:'Order Count',accessor:'quantityOrders', Footer: (
+         {Header:'Orders Count',accessor:'quantityOrders', Footer: (
             <FooterCell dataSet={data} options={{isInt:true,groupKey:'quantityOrders'}}/>
          )},
          {Header:'Gross', accessor:'gross', Footer: (
             <FooterCell dataSet={data} options={{isInt:false,groupKey:'gross'}}/>
          )},
-         {Header:'Item Discounts', accessor:'discount', Footer: (
-            <FooterCell dataSet={data} options={{isInt:false,groupKey:'discount'}}/>
+         {Header:'Items Discounts', accessor:'itemDisc', Footer: (
+            <FooterCell dataSet={data} options={{isInt:false,groupKey:'itemDisc'}}/>
+         )},
+         {Header:'Orders Discount', accessor:'orderDisc', Footer: (
+            <FooterCell dataSet={data} options={{isInt:false,groupKey:'orderDisc'}}/>
          )},
          {Header:'Net',accessor:'net', Footer: (
             <FooterCell dataSet={data} options={{isInt:false,groupKey:'net'}}/>
          )},
-         {Header:'Order Tax',accessor:'orderTax', Footer: (
+         {Header:'Orders Tax',accessor:'orderTax', Footer: (
             <FooterCell dataSet={data} options={{isInt:false,groupKey:'orderTax'}}/>
          )},
       ]
@@ -40,38 +43,44 @@ export const columns = {
       {Header:'Orders', accessor:'quantityItems', Footer: (
          <FooterCell dataSet={data} options={{isInt:true,groupKey:'quantityItems'}}/>
       )},
-      {Header:'Items Discounts',accessor:'discount', Footer: (
-         <FooterCell dataSet={data} options={{isInt:false,groupKey:'discount'}}/>
-      )},
       {Header:'Amount',accessor:'gross', Footer: (
          <FooterCell dataSet={data} options={{isInt:false,groupKey:'gross'}}/>
+      )},
+      {Header:'Items Discounts',accessor:'itemDisc', Footer: (
+         <FooterCell dataSet={data} options={{isInt:false,groupKey:'itemDisc'}}/>
+      )},
+      {Header:'Orders Discounts',accessor:'orderDisc', Footer: (
+         <FooterCell dataSet={data} options={{isInt:false,groupKey:'orderDisc'}}/>
       )},
     ]
 },
 
 
-  hoursSummary: (data) => {
-     return [
+  hoursSummary: (data, headers) => {
+     return  [
       {Header:'Category', accessor:'category', width: 200},
-      // {Header:'Item', accessor:'item', width: 300},
+      {Header:'Item', accessor:'item', width: 300, show: false},
       {Header:'Hour', accessor:'hour'},
 
       {Header:'Quantity',accessor:'quantityItems', Footer: (
           <FooterCell dataSet={data} options={{isInt:true,groupKey:'quantityItems'}}/>
       )},
-      {Header:'Order Count',accessor:'quantityOrders', Footer: (
+      {Header:'Orders Count',accessor:'quantityOrders', Footer: (
           <FooterCell dataSet={data} options={{isInt:true,groupKey:'quantityOrders'}}/>
       )},
       {Header:'Gross', accessor:'gross', Footer: (
           <FooterCell dataSet={data} options={{isInt:false,groupKey:'gross'}}/>
       )},
-      {Header:'Items Discounts', accessor:'discount', Footer: (
-          <FooterCell dataSet={data} options={{isInt:false,groupKey:'discount'}}/>
+      {Header:'Items Discounts', accessor:'itemDisc', Footer: (
+          <FooterCell dataSet={data} options={{isInt:false,groupKey:'itemDisc'}}/>
       )},
+      {Header:'Orders Discount', accessor:'orderDisc', Footer: (
+            <FooterCell dataSet={data} options={{isInt:false,groupKey:'orderDisc'}}/>
+         )},
       {Header:'Net',accessor:'net', Footer: (
           <FooterCell dataSet={data} options={{isInt:false,groupKey:'net'}}/>
       )},
-      {Header:'Order Tax',accessor:'orderTax', Footer: (
+      {Header:'Orders Tax',accessor:'orderTax', Footer: (
           <FooterCell dataSet={data} options={{isInt:false,groupKey:'orderTax'}}/>
       )},
     ]

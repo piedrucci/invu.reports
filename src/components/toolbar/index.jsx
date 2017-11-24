@@ -134,11 +134,13 @@ class ToolBar extends Component{
       const response = await api.getItemsSummary( this.state.epochDates, "" )
       const jsonData = await response.json()
 
-      if ( jsonData.encontro===true ){
+      if ( jsonData.encontro ){
         await this.setState({tempData:jsonData.data})
         this.groupData()
-      }else{
-        if (jsonData.error){alert(jsonData.mensaje)}
+      }else {
+        console.error(jsonData)
+        const strMsg = (typeof jsonData.mensaje !== 'undefined')?jsonData.mensaje:jsonData.error
+        if (jsonData.error){alert(strMsg)}
       }
     } catch (err) {
       alert(err)
@@ -155,7 +157,9 @@ class ToolBar extends Component{
         await this.setState({tempData:jsonData.data})
         this.groupData()
       }else{
-        if (jsonData.error){alert(jsonData.mensaje)}
+        console.error(jsonData)
+        const strMsg = (typeof jsonData.mensaje !== 'undefined')?jsonData.mensaje:jsonData.error
+        if (jsonData.error){alert(strMsg)}
       }
     } catch (err) {
       alert(err)
@@ -174,7 +178,9 @@ class ToolBar extends Component{
         await this.groupData()
 
       }else{
-        if (jsonData.error){alert(jsonData.mensaje)}
+        console.error(jsonData)
+        const strMsg = (typeof jsonData.mensaje !== 'undefined')?jsonData.mensaje:jsonData.error
+        if (jsonData.error){alert(strMsg)}
       }
     } catch (err) {
       alert(err)
@@ -216,7 +222,16 @@ class ToolBar extends Component{
     console.log(`agrupando por: ${groupName}`)
 
     // enviar al store los datos que muestra el reporte....
-    if (this.props.AppInfo.activeModule === 1) {await this.props.setSalesSummary( ProcessSales(groupName, this.state.tempData) )}
+    if (this.props.AppInfo.activeModule === 1) {
+      const salesColumns = ["category","item",'quantity', 'orders Count', 'gross', 
+      'items discounts', 'orders discount', 'net', 'orders tax']
+      
+      // el primer parametro es la posicion donde va a empezar a borrar y el seg param la cantidad de pos que va a borrar
+      if (groupName==='nombrecat'){salesColumns.splice(1, 1)}
+
+      await this.props.setSalesColsVisible(salesColumns)
+      await this.props.setSalesSummary( ProcessSales(groupName, this.state.tempData) )
+    }
 
     if (this.props.AppInfo.activeModule === 2) {
       await this.props.setDaySummary( ProcessSales(groupName, this.state.tempData) )
@@ -234,9 +249,17 @@ class ToolBar extends Component{
 
    }
 
-   if (this.props.AppInfo.activeModule === 3) {
-     await this.props.setHoursSummary( ProcessSales(groupName, this.state.tempData) )
-   }
+    if (this.props.AppInfo.activeModule === 3) {
+      const hoursColumns = ["category","item",'hour','quantity', 'orders Count', 'gross', 
+      'items discounts', 'orders discount', 'net', 'orders tax']
+      
+      if (groupName==='hora'){hoursColumns.splice(0, 2)}
+      if (groupName==='nombrecat'){hoursColumns.splice(1, 1)}
+
+      await this.props.setHoursColsVisible(hoursColumns)
+      const hoursSummary = await ProcessSales(groupName, this.state.tempData)
+      await this.props.setHoursSummary( hoursSummary )
+    }
 
   }
 
@@ -333,6 +356,7 @@ class ToolBar extends Component{
                     <a className="dropdown-item" role="button" onClick={()=>this.changeGroup('item')}>{this.state.hoursGrouping==='item'?<i className="fa fa-arrow-right" aria-hidden="true"></i>:null} No Grouping</a>
                     <div className="dropdown-divider"></div>
                     <a className="dropdown-item" role="button" onClick={()=>this.changeGroup('hora')}>{this.state.hoursGrouping==='hora'?<i className="fa fa-arrow-right" aria-hidden="true"></i>:null}  Hour</a>
+                    <a className="dropdown-item" role="button" onClick={()=>this.changeGroup('nombrecat')}>{this.state.hoursGrouping==='nombrecat'?<i className="fa fa-arrow-right" aria-hidden="true"></i>:null}  Category</a>
                   </div>
                 </div>
                 : null
@@ -359,6 +383,14 @@ class ToolBar extends Component{
 
         </div>
 
+
+        {/* <div className="alert alert-error alert-dismissible fade show" role="alert">
+          <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+          <button type="button" className="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div> */}
+
       </div>
     )
   }
@@ -375,12 +407,14 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     setSalesSummary: data => dispatch(appActions.setSalesSummary(data)),
+    setSalesColsVisible : data => dispatch(appActions.setSalesVisibleCols(data)),
 
     setDaySummary  : data => dispatch(appActions.setDaySummary(data)),
     setPaymentsDaySummary  : data => dispatch(appActions.setPaymentsDaySummary(data)),
     setDiscountsDaySummary  : data => dispatch(appActions.setDiscountsDaySummary(data)),
 
     setHoursSummary  : data => dispatch(appActions.setHoursData(data)),
+    setHoursColsVisible : data => dispatch(appActions.setHoursVisibleCols(data)),
 
   }
 };
