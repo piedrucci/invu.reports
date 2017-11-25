@@ -25,6 +25,9 @@ export const columns = {
          {Header:'Orders Discount', accessor:'orderDisc', Footer: (
             <FooterCell dataSet={data} options={{isInt:false,groupKey:'orderDisc'}}/>
          )},
+         {Header:'Discounts', accessor:'discounts', Footer: (
+            <FooterCell dataSet={data} options={{isInt:false,groupKey:'discounts'}}/>
+         )},
          {Header:'Net',accessor:'net', Footer: (
             <FooterCell dataSet={data} options={{isInt:false,groupKey:'net'}}/>
          )},
@@ -46,11 +49,14 @@ export const columns = {
       {Header:'Amount',accessor:'gross', Footer: (
          <FooterCell dataSet={data} options={{isInt:false,groupKey:'gross'}}/>
       )},
-      {Header:'Items Discounts',accessor:'itemDisc', Footer: (
-         <FooterCell dataSet={data} options={{isInt:false,groupKey:'itemDisc'}}/>
-      )},
-      {Header:'Orders Discounts',accessor:'orderDisc', Footer: (
-         <FooterCell dataSet={data} options={{isInt:false,groupKey:'orderDisc'}}/>
+      // {Header:'Items Discounts',accessor:'itemDisc', Footer: (
+      //    <FooterCell dataSet={data} options={{isInt:false,groupKey:'itemDisc'}}/>
+      // )},
+      // {Header:'Orders Discounts',accessor:'orderDisc', Footer: (
+      //    <FooterCell dataSet={data} options={{isInt:false,groupKey:'orderDisc'}}/>
+      // )},
+      {Header:'Discounts', accessor:'discounts', Footer: (
+         <FooterCell dataSet={data} options={{isInt:false,groupKey:'discounts'}}/>
       )},
     ]
 },
@@ -77,6 +83,9 @@ export const columns = {
       {Header:'Orders Discount', accessor:'orderDisc', Footer: (
             <FooterCell dataSet={data} options={{isInt:false,groupKey:'orderDisc'}}/>
          )},
+      {Header:'Discounts', accessor:'discounts', Footer: (
+         <FooterCell dataSet={data} options={{isInt:false,groupKey:'discounts'}}/>
+      )},
       {Header:'Net',accessor:'net', Footer: (
           <FooterCell dataSet={data} options={{isInt:false,groupKey:'net'}}/>
       )},

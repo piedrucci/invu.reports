@@ -17,6 +17,7 @@ export const ProcessSales = (groupName, data) => {
       gross: 0,
       itemDisc: 0,
       orderDisc: 0,
+      discounts: 0,
       net: 0,
       orderTax: 0,
       hour: rowInfo.item.hora
@@ -24,7 +25,6 @@ export const ProcessSales = (groupName, data) => {
 
     if (groupName==='nombrecat') delete itemInfo.item
     if (groupName==='hora') delete itemInfo.category
-    // if ( itemInfo.item==='' ) {delete itemInfo.item}
 
     row.map( (item, index) => {
 
@@ -33,15 +33,6 @@ export const ProcessSales = (groupName, data) => {
       item.item.modif.forEach(function(mod, indice, array) {
         totalMods+= ( mod.hora === item.item.hora ) ? parseFloat(mod.total) : 0
       })
-      /*totalMods = item.item.modif.reduce( (total, mod) => {
-        if(mod.hora === item.item.hora){
-          //console.log(`${mod.hora} === ${item.item.hora}`);
-
-        }
-        const totalMod = ( mod.hora === item.item.hora ) ? parseFloat(total) + parseFloat(mod.total) : 0
-        return totalMod
-      },0.0 )*/
-      // console.log(totalMods);
 
       itemInfo.quantityItems = parseInt(itemInfo.quantityItems, 10) + parseInt(item.item.cantidad_vendida, 10)
       itemInfo.quantityOrders = parseInt(itemInfo.quantityOrders, 10) + parseInt(item.item.cantidad_ordenes, 10)
@@ -52,6 +43,7 @@ export const ProcessSales = (groupName, data) => {
       const ordDisc = (parseFloat( itemInfo.orderDisc ) + parseFloat( item.item.descuentoOrden )).toFixed(2)
       itemInfo.itemDisc = parseFloat(itmDisc)
       itemInfo.orderDisc = parseFloat(ordDisc)
+      itemInfo.discounts = parseFloat( (itemInfo.itemDisc + itemInfo.orderDisc).toFixed(2) )
 
       const itemNet = ( parseFloat(itemInfo.net) + ( grossRow - (parseFloat(item.item.descuento)+parseFloat(item.item.descuentoOrden)) ) ).toFixed(2)
       itemInfo.net = parseFloat( itemNet )
@@ -66,6 +58,7 @@ export const ProcessSales = (groupName, data) => {
   } )
 
   return arrayItems
+  
 }
 
 
@@ -130,7 +123,7 @@ export const ProcessHours = (groupName, data) => {
           itemInfo.itemDisc = parseFloat( itemInfo.itemDisc ) + parseFloat( (item.item.descuento).toFixed(2) )
           itemInfo.orderDisc = parseFloat( itemInfo.orderDisc ) + parseFloat( (item.item.descuentoOrden).toFixed(2) )
 
-          const itemNet = ( parseFloat(itemInfo.net) + 
+          const itemNet = ( parseFloat(itemInfo.net) +
             parseFloat( (parseFloat(item.item.total_vendido) - (parseFloat(item.item.descuento)+parseFloat(item.item.descuentoOrden)) ).toFixed(2) ) ).toFixed(2)
           itemInfo.net = parseFloat( itemNet )
           itemInfo.orderTax = parseFloat(itemInfo.orderTax) + parseFloat( (item.item.tax).toFixed(2) )

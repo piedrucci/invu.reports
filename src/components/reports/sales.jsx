@@ -8,7 +8,7 @@ class SalesReport extends Component{
     const { salesSummaryData, salesVisibleColumns } = AppInfo
 
     let reportHeaders = columns.sales(salesSummaryData)
-    
+
     for ( var pos1 in reportHeaders ){
       for ( var pos2 in salesVisibleColumns ){
         reportHeaders[pos1].show = false

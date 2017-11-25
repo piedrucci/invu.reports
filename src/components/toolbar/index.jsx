@@ -207,9 +207,9 @@ class ToolBar extends Component{
 
     // enviar al store los datos que muestra el reporte....
     if (this.props.AppInfo.activeModule === 1) {
-      const salesColumns = ["category","item",'quantity', 'orders Count', 'gross', 
-      'items discounts', 'orders discount', 'net', 'orders tax']
-      
+      const salesColumns = ["category","item",'quantity', 'orders Count', 'gross',
+      'discounts', 'net', 'orders tax']
+
       // el primer parametro es la posicion donde va a empezar a borrar y el seg param la cantidad de pos que va a borrar
       if (groupName==='nombrecat'){salesColumns.splice(1, 1)}
 
@@ -234,9 +234,9 @@ class ToolBar extends Component{
    }
 
     if (this.props.AppInfo.activeModule === 3) {
-      const hoursColumns = ["category","item",'hour','quantity', 'orders Count', 'gross', 
-      'items discounts', 'orders discount', 'net', 'orders tax']
-      
+      const hoursColumns = ["category","item",'hour','quantity', 'orders Count', 'gross',
+      'discounts', 'net', 'orders tax']
+
       if (groupName==='hora'){hoursColumns.splice(0, 2)}
       if (groupName==='nombrecat'){hoursColumns.splice(1, 1)}
 
