@@ -1,4 +1,7 @@
 import _ from 'lodash'
+import {utils} from '../../utils/utils'
+
+
 
 export const ProcessSales = (groupName, data) => {
   // agrupar por el campo seleccionado (groupName)
@@ -30,24 +33,30 @@ export const ProcessSales = (groupName, data) => {
 
       let totalMods = 0
 
-      item.item.modif.forEach(function(mod, indice, array) {
-        totalMods+= ( mod.hora === item.item.hora ) ? parseFloat(mod.total) : 0
-      })
+      // item.item.modif.forEach(function(mod, indice, array) {
+      //   totalMods+= ( mod.hora === item.item.hora ) ? parseFloat(mod.total) : 0
+      // })
 
       itemInfo.quantityItems = parseInt(itemInfo.quantityItems, 10) + parseInt(item.item.cantidad_vendida, 10)
       itemInfo.quantityOrders = parseInt(itemInfo.quantityOrders, 10) + parseInt(item.item.cantidad_ordenes, 10)
       const grossRow =  parseFloat(item.item.total_vendido) + totalMods
-      itemInfo.gross =  parseFloat( ( parseFloat(itemInfo.gross) + grossRow).toFixed(2) )
+      itemInfo.gross =  parseFloat( (parseFloat(itemInfo.gross) + grossRow).toFixed(2) )
 
-      const itmDisc = (parseFloat( itemInfo.itemDisc ) + parseFloat( item.item.descuento )).toFixed(2)
-      const ordDisc = (parseFloat( itemInfo.orderDisc ) + parseFloat( item.item.descuentoOrden )).toFixed(2)
-      itemInfo.itemDisc = parseFloat(itmDisc)
-      itemInfo.orderDisc = parseFloat(ordDisc)
+      const itmDisc = parseFloat( itemInfo.itemDisc ) + parseFloat( item.item.descuento )
+      const ordDisc = parseFloat( itemInfo.orderDisc ) + parseFloat( item.item.descuentoOrden )
+      itemInfo.itemDisc = parseFloat( (itmDisc).toFixed(2) )
+      itemInfo.orderDisc = parseFloat( (ordDisc).toFixed(2) )
       itemInfo.discounts = parseFloat( (itemInfo.itemDisc + itemInfo.orderDisc).toFixed(2) )
+      const itemNet = parseFloat(itemInfo.net) + ( grossRow - (utils.cutDecimals(parseFloat(item.item.descuento))+utils.cutDecimals(parseFloat(item.item.descuentoOrden))) )
+      itemInfo.net = parseFloat( (itemNet).toFixed(2) )
+      itemInfo.orderTax = parseFloat(itemInfo.orderTax) + parseFloat( item.item.tax )
 
-      const itemNet = ( parseFloat(itemInfo.net) + ( grossRow - (parseFloat(item.item.descuento)+parseFloat(item.item.descuentoOrden)) ) ).toFixed(2)
-      itemInfo.net = parseFloat( itemNet )
-      itemInfo.orderTax = parseFloat(itemInfo.orderTax) + parseFloat( (item.item.tax).toFixed(2) )
+      // cortar los decimales a 2 decimales (no se esta redondeando!)...
+      // itemInfo.gross = utils.cutDecimals(itemInfo.gross)
+      // itemInfo.itemDisc = utils.cutDecimals(itemInfo.itemDisc)
+      // itemInfo.orderDisc = utils.cutDecimals(itemInfo.orderDisc)
+      // itemInfo.discounts = utils.cutDecimals(itemInfo.discounts)
+      // itemInfo.net = utils.cutDecimals(itemInfo.net)
 
       return null
 
@@ -58,7 +67,7 @@ export const ProcessSales = (groupName, data) => {
   } )
 
   return arrayItems
-  
+
 }
 
 
@@ -185,6 +194,7 @@ export const ProcessDaySummary = (groupName, data) => {
       rowInfo.quantityItems += parseInt(elem.item.cantidad_ordenes, 10)
       rowInfo.discount += parseFloat(elem.item.descuento)
       // rowInfo.price += parseFloat(finalPrice)
+
 
       return null
 

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+// import {utils} from '../../utils/utils'
 
 class FooterCell extends Component {
    constructor(props) {
@@ -28,6 +29,9 @@ class FooterCell extends Component {
          }
       },0.0 )
       this.setState({total: (this.props.options.isInt) ? total : total.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')})
+      // let formattedTotal = utils.cutDecimals(total)
+      // formattedTotal = formattedTotal.toString().replace(/(\d)(?=(\d{3})+\.)/g, '$1,')
+      // this.setState({total: formattedTotal})
    }
 
    render() {

@@ -68,6 +68,20 @@ export const utils = {
     sessionStorage.setItem('json', JSON.stringify(session)
     )
   },
+
+  cutDecimals(amount, decimals = 2) {
+     const arr = amount.toString().split('.')
+     if ( arr.length>1 ){
+        if ( arr[1].length>decimals ){
+           return parseFloat(arr[0]+'.'+arr[1].substr(0,decimals))
+        }else{
+           return amount
+        }
+     }else{
+        return amount
+     }
+  },
+  
 }
 
 

@@ -64,6 +64,7 @@ class DaySummaryReport extends Component{
     if ( typeof discounts.items !== 'undefined' ) {
 
       itemDiscounts = discounts.items.map( (disc, index) => {
+         const totalDisc = parseFloat()
         return (<tr key={index}>
           <td>{disc.descuento} (Item)</td>
           <td>{disc.cantidad}</td>
@@ -136,8 +137,8 @@ class DaySummaryReport extends Component{
                     </tr>
                   </thead>
                   <tbody>
-                    {orderDiscounts}
                     {itemDiscounts}
+                    {orderDiscounts}
                   </tbody>
                 </table>
               </div>
